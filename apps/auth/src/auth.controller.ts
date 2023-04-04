@@ -5,12 +5,12 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get()
+  @Get('/')
   getHello(): string {
     return this.authService.getHello();
   }
 
-  @Get('/healthcheck')
+  @Get('/auth/healthcheck')
   healthCheck(): number {
     return 200;
   }
