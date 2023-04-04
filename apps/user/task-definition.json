@@ -1,20 +1,20 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:701549471345:task-definition/wooyeon-ecs-auth-task:4",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:701549471345:task-definition/wooyeon-ecs-user-task:1",
   "containerDefinitions": [
     {
-      "name": "wooyeon-auth-container",
-      "image": "701549471345.dkr.ecr.ap-northeast-2.amazonaws.com/wooyeon-auth:latest",
+      "name": "wooyeon-user-container",
+      "image": "701549471345.dkr.ecr.ap-northeast-2.amazonaws.com/wooyeon-user:latest",
       "cpu": 0,
       "portMappings": [
         {
-          "name": "wooyeon-auth-container-80-tcp",
+          "name": "wooyeon-user-container-80-tcp",
           "containerPort": 80,
           "hostPort": 80,
           "protocol": "tcp",
           "appProtocol": "http"
         },
         {
-          "name": "wooyeon-auth-container-8080-tcp",
+          "name": "wooyeon-user-container-8080-tcp",
           "containerPort": 8080,
           "hostPort": 8080,
           "protocol": "tcp",
@@ -23,24 +23,25 @@
       ],
       "essential": true,
       "environment": [],
+      "environmentFiles": [],
       "mountPoints": [],
       "volumesFrom": [],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
           "awslogs-create-group": "true",
-          "awslogs-group": "/ecs/wooyeon-auth",
+          "awslogs-group": "/ecs/wooyeon-ecs-user-task",
           "awslogs-region": "ap-northeast-2",
           "awslogs-stream-prefix": "ecs"
         }
       }
     }
   ],
-  "family": "wooyeon-ecs-auth-task",
+  "family": "wooyeon-ecs-user-task",
   "taskRoleArn": "arn:aws:iam::701549471345:role/ecsTaskExecutionRole",
   "executionRoleArn": "arn:aws:iam::701549471345:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
-  "revision": 4,
+  "revision": 1,
   "volumes": [],
   "status": "ACTIVE",
   "requiresAttributes": [
@@ -81,7 +82,7 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "registeredAt": "2023-04-04T16:48:07.115Z",
-  "registeredBy": "arn:aws:iam::701549471345:user/wooyeons-admin",
+  "registeredAt": "2023-04-04T21:01:06.550Z",
+  "registeredBy": "arn:aws:iam::701549471345:root",
   "tags": []
 }
