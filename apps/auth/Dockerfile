@@ -20,4 +20,5 @@ ENV NODE_ENV production
 #9
 COPY --from=builder /app ./
 #10
-CMD ["npm","run","start:prod","auth"]
+
+CMD ["npm","run","start:auth:prod"]
