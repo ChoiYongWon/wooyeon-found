@@ -8,7 +8,7 @@ COPY . .
 # 4
 RUN npm i
 # 5
-RUN npm run build
+RUN npm run build auth
 
 # STEP 2
 #6
