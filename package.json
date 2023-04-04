@@ -12,6 +12,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:auth:prod": "node dist/apps/auth/main",
+    "start:user:prod": "node dist/apps/user/main",
     "start:prod": "node dist/apps/wooyeon_microservice/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
