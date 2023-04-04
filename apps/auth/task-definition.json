@@ -1,9 +1,9 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:701549471345:task-definition/wooyeon-ecs-auth-task:2",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:701549471345:task-definition/wooyeon-ecs-auth-task:4",
   "containerDefinitions": [
     {
       "name": "wooyeon-auth-container",
-      "image": "701549471345.dkr.ecr.ap-northeast-2.amazonaws.com/wooyeon-auth:latest",
+      "image": "701549471345.dkr.ecr.ap-northeast-2.amazonaws.com/wooyeon-auth:b5afc840f05e1b45b41f95b9d42a03cd5d9b67b5",
       "cpu": 0,
       "portMappings": [
         {
@@ -23,7 +23,6 @@
       ],
       "essential": true,
       "environment": [],
-      "environmentFiles": [],
       "mountPoints": [],
       "volumesFrom": [],
       "logConfiguration": {
@@ -41,7 +40,7 @@
   "taskRoleArn": "arn:aws:iam::701549471345:role/ecsTaskExecutionRole",
   "executionRoleArn": "arn:aws:iam::701549471345:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
-  "revision": 2,
+  "revision": 4,
   "volumes": [],
   "status": "ACTIVE",
   "requiresAttributes": [
@@ -76,13 +75,13 @@
   "placementConstraints": [],
   "compatibilities": ["EC2", "FARGATE"],
   "requiresCompatibilities": ["EC2"],
-  "cpu": "256",
+  "cpu": "1024",
   "memory": "512",
   "runtimePlatform": {
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "registeredAt": "2023-04-04T12:33:29.368Z",
-  "registeredBy": "arn:aws:iam::701549471345:root",
+  "registeredAt": "2023-04-04T16:48:07.115Z",
+  "registeredBy": "arn:aws:iam::701549471345:user/wooyeons-admin",
   "tags": []
 }
