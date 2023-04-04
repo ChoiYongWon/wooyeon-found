@@ -9,4 +9,9 @@ export class AuthController {
   getHello(): string {
     return this.authService.getHello();
   }
+
+  @Get('/healthcheck')
+  healthCheck(): number {
+    return 200;
+  }
 }
