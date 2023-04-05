@@ -1,5 +1,5 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:701549471345:task-definition/wooyeon-ecs-auth-task:4",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:701549471345:task-definition/wooyeon-ecs-auth-task:1",
   "containerDefinitions": [
     {
       "name": "wooyeon-auth-container",
