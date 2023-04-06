@@ -1,6 +1,6 @@
 # STEP 1
 # 1
-FROM arm64v8/node:16 AS builder
+FROM node:16 AS builder
 # 2
 WORKDIR /app
 # 3
@@ -12,7 +12,7 @@ RUN npm run build auth
 
 # STEP 2
 #6
-FROM arm64v8/node:16-alpine
+FROM node:16-alpine
 #7
 WORKDIR /app
 #8
