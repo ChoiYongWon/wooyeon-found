@@ -38,6 +38,7 @@ env:
   ECR_REPOSITORY: wooyeon-user # set this to your Amazon ECR repository name
   ECS_SERVICE: user # set this to your Amazon ECS service name
   ECS_CLUSTER: wooyeon-cluster # set this to your Amazon ECS cluster name
+  DOCKER_FILE: apps/user/Dockerfile
   ECS_TASK_DEFINITION:
     ./apps/user/task-definition.json # set this to the path to your Amazon ECS task definition
     # file, e.g. .aws/task-definition.json
@@ -79,7 +80,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -100,29 +100,34 @@ jobs:
       #     # Build a docker container and
       #     # push it to ECR so that it can
       #     # be deployed to ECS.
+      #     ls
       #     docker buildx build --platform linux/arm64 -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f apps/user/Dockerfile .
       #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       #     echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
+      # - name: Download task definition
+      #   run: |
+      #     aws ecs describe-task-definition --task-definition wooyeon-ecs-user-task --query taskDefinition > ./apps/user/task-definition.json
       - name: Build, tag, and push image to Amazon ECR
         uses: docker/build-push-action@v4
         id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
+        # env:
+        #   ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        #   IMAGE_TAG: ${{ github.sha }}
         with:
           context: .
           push: true
-          tags: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
           platforms: linux/arm64
-          file: apps/user/Dockerfile
+          file: ${{ env.DOCKER_FILE }}
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
