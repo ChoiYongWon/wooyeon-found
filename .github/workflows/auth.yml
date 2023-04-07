@@ -100,9 +100,9 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           ls
-          docker buildx build --platform linux/arm64 -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f apps/auth/Dockerfile .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker buildx build --platform linux/arm64 -t ${{ ECR_REGISTRY }}/${{ ECR_REPOSITORY }}:${{ IMAGE_TAG }} -f apps/auth/Dockerfile .
+          docker push ${{ ECR_REGISTRY }}/${{ ECR_REPOSITORY }}:${{ IMAGE_TAG }}
+          echo "::set-output name=image::${{ ECR_REGISTRY }}/${{ ECR_REPOSITORY }}:${{ IMAGE_TAG }}"
       # - name: Download task definition
       #   run: |
       #     aws ecs describe-task-definition --task-definition wooyeon-ecs-auth-task --query taskDefinition > ./apps/auth/task-definition.json
