@@ -58,9 +58,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Check Docker Version
-        run: docker --version
-
       # - name: Setting .env
       #   run: |
       #     echo "DB_URL=${{ secrets.DB_URL }}" >> .prod.env
@@ -93,6 +90,12 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: ENV Test
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          echo "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
       # - name: Build, tag, and push image to Amazon ECR
       #   id: build-image
       #   env:
@@ -122,6 +125,7 @@ jobs:
           tags: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           platforms: linux/arm64
           file: apps/auth/Dockerfile
+        run: |
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
