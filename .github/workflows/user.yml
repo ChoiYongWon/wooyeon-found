@@ -74,6 +74,8 @@ jobs:
       #     echo "S3_REGION=${{ secrets.S3_REGION }}" >> .prod.env
       #     echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> .prod.env
       #     cat .prod.env
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
