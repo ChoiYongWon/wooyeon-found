@@ -38,6 +38,7 @@ env:
   ECR_REPOSITORY: wooyeon-auth # set this to your Amazon ECR repository name
   ECS_SERVICE: auth # set this to your Amazon ECS service name
   ECS_CLUSTER: wooyeon-cluster # set this to your Amazon ECS cluster name
+  DOCKER_FILE:
   ECS_TASK_DEFINITION:
     ./apps/auth/task-definition.json # set this to the path to your Amazon ECS task definition
     # file, e.g. .aws/task-definition.json
@@ -122,9 +123,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/wooyeon-auth:${{ github.sha }}
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
           platforms: linux/arm64
-          file: apps/auth/Dockerfile
+          file: ${{ env.DOCKER_FILE }}
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
@@ -132,7 +133,7 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.tags }}
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
