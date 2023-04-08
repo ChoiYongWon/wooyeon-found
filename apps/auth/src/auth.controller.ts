@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller()
 export class AuthController {
@@ -7,11 +8,17 @@ export class AuthController {
 
   @Get('/auth')
   getHello(): string {
+    console.log('/auth');
     return this.authService.getHello();
   }
 
   @Get('/auth/healthcheck')
   healthCheck(): number {
     return 200;
+  }
+
+  @MessagePattern({ cmd: 'auth' })
+  async accumulate(data: number[]): Promise<number> {
+    return (data || []).reduce((a, b) => a + b);
   }
 }
