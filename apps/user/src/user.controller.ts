@@ -25,14 +25,16 @@ export class UserController {
   @Get('/user/http')
   async userHttp(): Promise<number> {
     const { data } = await firstValueFrom(
-      this.httpService.get('http://auth:80/auth'),
+      this.httpService.get('http://auth-http:80/auth'),
     );
     return data;
   }
 
   @Get('/user/nohttp')
   async userWithoutHttp(): Promise<number> {
-    const { data } = await firstValueFrom(this.httpService.get('auth:80/auth'));
+    const { data } = await firstValueFrom(
+      this.httpService.get('auth-http:80/auth'),
+    );
     return data;
   }
 
