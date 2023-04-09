@@ -1,12 +1,14 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
+import { HttpService } from '@nestjs/axios';
 
 @Controller()
 export class UserController {
   constructor(
     private readonly userService: UserService,
+    private readonly httpService: HttpService,
     @Inject('AUTH_SERVICE') private client: ClientProxy,
   ) {}
 
@@ -18,6 +20,20 @@ export class UserController {
   @Get('/user/healthcheck')
   healthCheck(): number {
     return 200;
+  }
+
+  @Get('/user/http')
+  async userHttp(): Promise<number> {
+    const { data } = await firstValueFrom(
+      this.httpService.get('http://auth:80/auth'),
+    );
+    return data;
+  }
+
+  @Get('/user/nohttp')
+  async userWithoutHttp(): Promise<number> {
+    const { data } = await firstValueFrom(this.httpService.get('auth:80/auth'));
+    return data;
   }
 
   @Get('/user/auth')
