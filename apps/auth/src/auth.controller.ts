@@ -1,9 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { MessagePattern } from '@nestjs/microservices';
-import { HttpService } from '@nestjs/axios';
-import { Observable } from 'rxjs';
-import { AxiosResponse } from 'axios';
 
 @Controller()
 export class AuthController {

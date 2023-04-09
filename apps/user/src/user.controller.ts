@@ -33,7 +33,7 @@ export class UserController {
   @Get('/user/nohttp')
   async userWithoutHttp(): Promise<number> {
     const { data } = await firstValueFrom(
-      this.httpService.get('auth-http:80/auth'),
+      this.httpService.get('http://auth:8080'),
     );
     return data;
   }
