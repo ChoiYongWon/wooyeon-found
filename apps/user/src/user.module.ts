@@ -11,7 +11,7 @@ import { HttpModule } from '@nestjs/axios';
         name: 'AUTH_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'http://auth',
+          host: 'auth',
           port: 8080,
         },
       },
