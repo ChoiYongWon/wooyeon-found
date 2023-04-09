@@ -29,7 +29,7 @@ export class UserController {
   @Get('/user/http')
   async userHttp(): Promise<number> {
     const { data } = await firstValueFrom(
-      this.httpService.get('http://auth-http:80/auth'),
+      this.httpService.get('http://naver.com'),
     );
     return data;
   }
