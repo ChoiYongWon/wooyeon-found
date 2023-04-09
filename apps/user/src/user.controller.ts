@@ -30,14 +30,6 @@ export class UserController {
     return data;
   }
 
-  @Get('/user/nohttp')
-  async userWithoutHttp(): Promise<number> {
-    const { data } = await firstValueFrom(
-      this.httpService.get('http://auth:8080'),
-    );
-    return data;
-  }
-
   @Get('/user/auth')
   getUserAuth(): Observable<number> {
     const pattern = { cmd: 'auth' };
