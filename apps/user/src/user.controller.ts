@@ -12,6 +12,10 @@ export class UserController {
     @Inject('AUTH_SERVICE') private client: ClientProxy,
   ) {}
 
+  // async onApplicationBootstrap() {
+  //   await this.client.connect();
+  // }
+
   @Get('/user')
   getHello(): string {
     return this.userService.getHello();
