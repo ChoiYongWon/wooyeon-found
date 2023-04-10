@@ -1,6 +1,6 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Observable, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { HttpService } from '@nestjs/axios';
 
@@ -32,12 +32,5 @@ export class UserController {
       this.httpService.get('http://naver.com'),
     );
     return data;
-  }
-
-  @Get('/user/auth')
-  getUserAuth(): Observable<number> {
-    const pattern = { cmd: 'auth' };
-    const payload = [1, 2, 3];
-    return this.client.send<number>(pattern, payload);
   }
 }

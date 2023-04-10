@@ -3,6 +3,7 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { HttpModule } from '@nestjs/axios';
+import { SqsModule } from '@ssut/nestjs-sqs';
 
 @Module({
   imports: [
@@ -19,6 +20,14 @@ import { HttpModule } from '@nestjs/axios';
     HttpModule.register({
       timeout: 5000,
       maxRedirects: 5,
+    }),
+    SqsModule.registerAsync({
+      useFactory: () => {
+        return {
+          consumers: [],
+          producers: [],
+        };
+      },
     }),
   ],
   controllers: [UserController],

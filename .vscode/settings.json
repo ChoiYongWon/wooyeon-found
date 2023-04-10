@@ -1,0 +1,17 @@
+{
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "previewLimit": 50,
+      "server": "wooyeon-db.caxi0pmynzrt.ap-northeast-2.rds.amazonaws.com",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "ss",
+      "database": "wooyeon",
+      "username": "wooyeon_admin",
+      "askForPassword": true
+    }
+  ]
+}

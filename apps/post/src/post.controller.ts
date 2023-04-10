@@ -5,8 +5,13 @@ import { PostService } from './post.service';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Get()
+  @Get('/post')
   getHello(): string {
     return this.postService.getHello();
+  }
+
+  @Get('/post/healthcheck')
+  healthCheck(): number {
+    return 200;
   }
 }

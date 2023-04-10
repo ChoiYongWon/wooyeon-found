@@ -54,6 +54,24 @@
       "compilerOptions": {
         "tsConfigPath": "apps/auth/tsconfig.app.json"
       }
+    },
+    "comment": {
+      "type": "application",
+      "root": "apps/comment",
+      "entryFile": "main",
+      "sourceRoot": "apps/comment/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/comment/tsconfig.app.json"
+      }
+    },
+    "emotion": {
+      "type": "application",
+      "root": "apps/emotion",
+      "entryFile": "main",
+      "sourceRoot": "apps/emotion/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/emotion/tsconfig.app.json"
+      }
     }
   }
 }
