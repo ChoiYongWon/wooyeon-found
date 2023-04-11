@@ -1,19 +1,14 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { UserService } from './user.service';
 import { firstValueFrom } from 'rxjs';
-import { ClientProxy } from '@nestjs/microservices';
 import { HttpService } from '@nestjs/axios';
 
 @Controller()
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly httpService: HttpService, // @Inject('AUTH_SERVICE') private client: ClientProxy,
+    private readonly httpService: HttpService,
   ) {}
-
-  // async onApplicationBootstrap() {
-  //   await this.client.connect();
-  // }
 
   @Get('/user')
   getHello(): string {
