@@ -59,13 +59,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # - name: Setting .env
-      #   run: |
-      #     echo "DB_URL=${{ secrets.DB_URL }}" >> .prod.env
-      #     echo "DB_PORT=${{ secrets.DB_PORT }}" >> .prod.env
-      #     echo "DB_NAME=${{ secrets.DB_NAME }}" >> .prod.env
-      #     echo "DB_USER=${{ secrets.DB_USER }}" >> .prod.env
-      #     echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .prod.env
+      - name: Setting .env
+        run: |
+          echo "DB_URL=${{ secrets.DB_URL }}" >> .prod.env
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .prod.env
+          echo "DB_DATABASE=${{ secrets.DB_DATABASE_USER }}" >> .prod.env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .prod.env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .prod.env
       #     echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .prod.env
       #     echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .prod.env
       #     echo "KAKAO_CALLBACK_URL=${{ secrets.KAKAO_CALLBACK_URL }}" >> .prod.env

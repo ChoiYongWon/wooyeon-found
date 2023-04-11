@@ -8,8 +8,7 @@ import { HttpService } from '@nestjs/axios';
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly httpService: HttpService,
-    @Inject('AUTH_SERVICE') private client: ClientProxy,
+    private readonly httpService: HttpService, // @Inject('AUTH_SERVICE') private client: ClientProxy,
   ) {}
 
   // async onApplicationBootstrap() {
@@ -32,5 +31,10 @@ export class UserController {
       this.httpService.get('http://naver.com'),
     );
     return data;
+  }
+
+  @Get('/user/postCount')
+  async getPostCountFromPostService(): Promise<number> {
+    return await this.userService.getPostCountFromPost();
   }
 }
