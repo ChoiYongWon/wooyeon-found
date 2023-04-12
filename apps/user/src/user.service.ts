@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 export class UserService {
   constructor(private readonly httpService: HttpService) {}
   getHello(): string {
-    return 'User Service Ver. 7';
+    return 'BinBin';
   }
 
   async getPostCountFromPost() {
