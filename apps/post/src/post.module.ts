@@ -4,6 +4,7 @@ import { PostService } from './post.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './entity/post.entity';
 import { ConfigModule } from '@nestjs/config';
+import { CommonModule } from '@app/common';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConfigModule } from '@nestjs/config';
       entities: [Post],
       synchronize: true,
     }),
+    CommonModule,
   ],
   controllers: [PostController],
   providers: [PostService],
