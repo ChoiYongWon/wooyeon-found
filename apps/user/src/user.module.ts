@@ -5,7 +5,6 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './entity/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { userRepository } from './user.repository';
 
 @Module({
   imports: [
@@ -13,7 +12,7 @@ import { userRepository } from './user.repository';
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'prod' ? '.prod.env' : '.dev.env',
     }),
-    TypeOrmModule.forFeature([User, userRepository]),
+    TypeOrmModule.forFeature([User]),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: `${process.env.DB_URL}`,

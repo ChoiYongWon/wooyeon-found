@@ -28,4 +28,7 @@ export class User {
 
   @CreateDateColumn()
   created_at!: Date;
+
+  @Column('varchar')
+  message: string;
 }
