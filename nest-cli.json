@@ -72,6 +72,24 @@
       "compilerOptions": {
         "tsConfigPath": "apps/emotion/tsconfig.app.json"
       }
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
+    },
+    "sns": {
+      "type": "library",
+      "root": "libs/sns",
+      "entryFile": "index",
+      "sourceRoot": "libs/sns/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/sns/tsconfig.lib.json"
+      }
     }
   }
 }
