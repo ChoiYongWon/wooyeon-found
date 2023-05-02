@@ -5,6 +5,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './entity/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CommonModule } from '@app/common';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: [User],
       synchronize: true,
     }),
+    CommonModule,
   ],
   controllers: [UserController],
   providers: [UserService],
