@@ -25,6 +25,8 @@
     "test:e2e": "jest --config ./apps/wooyeon_microservice/test/jest-e2e.json"
   },
   "dependencies": {
+    "@aws-sdk/client-sns": "^3.321.1",
+    "@aws-sdk/client-sqs": "^3.321.1",
     "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
@@ -89,7 +91,8 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1"
+      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
+      "^@app/sns(|/.*)$": "<rootDir>/libs/sns/src/$1"
     }
   }
 }
