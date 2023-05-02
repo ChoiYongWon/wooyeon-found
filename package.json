@@ -25,11 +25,15 @@
     "test:e2e": "jest --config ./apps/wooyeon_microservice/test/jest-e2e.json"
   },
   "dependencies": {
+    "@aws-sdk/client-sns": "^3.321.1",
+    "@aws-sdk/client-sqs": "^3.321.1",
     "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/jwt": "^10.0.3",
     "@nestjs/microservices": "^9.4.0",
+    "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.3.0",
     "@nestjs/typeorm": "^9.0.1",
@@ -38,6 +42,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "mysql2": "^3.2.0",
+    "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "typeorm": "^0.3.14"
@@ -82,7 +87,12 @@
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "roots": [
-      "<rootDir>/apps/"
-    ]
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
+      "^@app/sns(|/.*)$": "<rootDir>/libs/sns/src/$1"
+    }
   }
 }
