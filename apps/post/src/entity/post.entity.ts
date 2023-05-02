@@ -10,6 +10,9 @@ export class Post {
   @PrimaryGeneratedColumn('uuid')
   post_id!: string;
 
+  @Column('varchar')
+  user_id!: string;
+
   @Column('varchar', { length: 200 })
   content: string;
 
