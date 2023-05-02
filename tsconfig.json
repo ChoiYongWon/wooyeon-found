@@ -23,6 +23,12 @@
       ],
       "@app/common/*": [
         "libs/common/src/*"
+      ],
+      "@app/sns": [
+        "libs/sns/src"
+      ],
+      "@app/sns/*": [
+        "libs/sns/src/*"
       ]
     }
   }

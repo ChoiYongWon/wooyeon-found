@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './entity/post.entity';
 import { ConfigModule } from '@nestjs/config';
 import { CommonModule } from '@app/common';
+import { SnsModule } from '@app/sns';
+import { SqsModule } from '@ssut/nestjs-sqs';
+import { MessageHandler } from './post.message.handler';
 
 @Module({
   imports: [
@@ -23,9 +26,20 @@ import { CommonModule } from '@app/common';
       entities: [Post],
       synchronize: true,
     }),
+    SqsModule.register({
+      consumers: [
+        {
+          name: 'post-user_deleted.fifo', // name of the queue
+          queueUrl: `${process.env.SQS_URL}/post-user_deleted.fifo`,
+          region: 'ap-northeast-2', // url of the queue,
+        },
+      ],
+      producers: [],
+    }),
     CommonModule,
+    SnsModule,
   ],
   controllers: [PostController],
-  providers: [PostService],
+  providers: [PostService, MessageHandler],
 })
 export class PostModule {}
