@@ -121,4 +121,9 @@ export class UserController {
   async sendInfoByToken(@Req() req) {
     return await this.userService.findOne(req.user.user_id);
   }
+
+  @Get('/healthcheck')
+  healthCheck(): number {
+    return 200;
+  }
 }
