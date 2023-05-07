@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { User } from './entity/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from '@app/common';
+import { SnsModule } from '@app/sns';
+import { SqsModule } from '@ssut/nestjs-sqs';
 
 @Module({
   imports: [
@@ -24,7 +26,9 @@ import { CommonModule } from '@app/common';
       entities: [User],
       synchronize: true,
     }),
+
     CommonModule,
+    SnsModule,
   ],
   controllers: [UserController],
   providers: [UserService],

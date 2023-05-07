@@ -1,16 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString } from 'class-validator';
+import { CATEGORY } from '../entity/Categories';
+import { ROLE } from '../entity/Roles';
 
 export class RequestCreateUserDto {
   @ApiProperty()
-  @IsString()
   name: string;
 
   @ApiProperty()
-  @IsEmail()
   email: string;
 
   @ApiProperty()
-  @IsString()
-  message: string;
+  message?: string;
+
+  @ApiProperty()
+  category: CATEGORY[];
 }

@@ -7,6 +7,7 @@ import {
   Body,
   Delete,
   Query,
+  Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { firstValueFrom } from 'rxjs';
@@ -19,14 +20,18 @@ import { Roles } from '@app/common/decorators/roles.decorator';
 import { Role } from '@app/common/enums/role.enum';
 import { RequestUpdateUserDto } from './dto/RequestUpdateUser.dto';
 import { RequestGetUserDto } from './dto/RequestGetUser.dto';
-//http://localhost/user/api#/
+import SnsService from '@app/sns/sns.service';
+import { RequestGetOneUserDto } from './dto/RequestGetOneUser.dto';
+import { ResponseCreateUserDto } from './dto/ResponseCreateUser.dto';
+import { RequestCreateUserDto } from './dto/RequestCreateUser.dto';
+//https://api.wooyeons.site/user/api
+//http://localhost/user/api // 배포 후 상태, 모든 서버에서 확인가능
+//npm run start:dev user // 배포 전 상태, 내 서버에서만 확인가능
 
 @ApiTags('user')
 @Controller('user')
-@UseGuards(RolesGuard)
-@UseGuards(JwtAuthGuard)
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   @ApiOperation({
@@ -37,8 +42,21 @@ export class UserController {
     type: ResponseGetUserDto,
   })
   @Roles([Role.User])
+  @UseGuards(JwtAuthGuard)
   async getOwnUser(@Req() req) {
     return await this.userService.findOne(req.user.user_id);
+  }
+
+  @Post()
+  @ApiOperation({
+    summary: '유저 생성',
+  })
+  @ApiCreatedResponse({
+    status: 200,
+    type: ResponseCreateUserDto,
+  })
+  async createUser(@Body() createUserBody: RequestCreateUserDto) {
+    return await this.userService.create(createUserBody);
   }
 
   // 수정
@@ -47,6 +65,7 @@ export class UserController {
     summary: '본인 정보를 수정합니다.',
   })
   @Roles([Role.User])
+  @UseGuards(JwtAuthGuard)
   async patchUser(@Req() req, @Body() updateData: RequestUpdateUserDto) {
     return await this.userService.update(req.user.user_id, updateData);
   }
@@ -57,6 +76,8 @@ export class UserController {
     summary: '본인 정보를 삭제합니다.',
   })
   @Roles([Role.User])
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
   async removeUser(@Req() req) {
     return await this.userService.delete(req.user.user_id);
   }
@@ -70,8 +91,34 @@ export class UserController {
     type: ResponseGetUserDto,
   })
   @Roles([Role.User])
-  async getUser(@Query() query: RequestGetUserDto) {
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  async getUser(@Query() query: RequestGetOneUserDto) {
     const { user_id } = query;
     return await this.userService.findOne(user_id);
+  }
+
+  // 토큰이 없는 상황
+  @Get('/email')
+  @ApiOperation({
+    summary: 'auth에서 email정보를 전송했습니다.',
+  })
+  //localhost/user/email?email=yongwon0824
+  async sendInfo(
+    @Query() query: RequestGetUserDto,
+  ): Promise<ResponseGetUserDto> {
+    return await this.userService.findOneByEmail(query.email);
+  }
+
+  // 토큰이 있는 상황
+  @Get()
+  @ApiOperation({
+    summary: '토큰이 있으면 토큰에 있는 user_id를 기반으로 정보 전송',
+  })
+  @Roles([Role.User])
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  async sendInfoByToken(@Req() req) {
+    return await this.userService.findOne(req.user.user_id);
   }
 }

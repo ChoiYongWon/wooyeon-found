@@ -20,8 +20,8 @@ export class User {
   @IsEmail({}, { message: 'Incorrect email' })
   email!: string;
 
-  @Column('varchar')
-  category!: CATEGORY;
+  @Column('simple-array')
+  category!: CATEGORY[];
 
   @Column('varchar')
   role!: ROLE;
