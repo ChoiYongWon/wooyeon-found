@@ -27,26 +27,26 @@ import { HttpModule } from '@nestjs/axios';
       entities: [Post],
       synchronize: true,
     }),
-    SqsModule.register({
-      consumers: [
-        {
-          name: 'post-user_deleted.fifo', // name of the queue
-          queueUrl: `${process.env.SQS_URL}/post-user_deleted.fifo`,
-          region: 'ap-northeast-2', // url of the queue,
-        },
-        {
-          name: 'post-comment_deleted.fifo', // name of the queue
-          queueUrl: `${process.env.SQS_URL}/post-comment_deleted.fifo`,
-          region: 'ap-northeast-2', // url of the queue,
-        },
-      ],
-      producers: [],
-    }),
+    // SqsModule.register({
+    //   consumers: [
+    //     {
+    //       name: 'post-user_deleted.fifo', // name of the queue
+    //       queueUrl: `${process.env.SQS_URL}/post-user_deleted.fifo`,
+    //       region: 'ap-northeast-2', // url of the queue,
+    //     },
+    //     {
+    //       name: 'post-comment_deleted.fifo', // name of the queue
+    //       queueUrl: `${process.env.SQS_URL}/post-comment_deleted.fifo`,
+    //       region: 'ap-northeast-2', // url of the queue,
+    //     },
+    //   ],
+    //   producers: [],
+    // }),
     CommonModule,
     SnsModule,
     HttpModule,
   ],
   controllers: [PostController],
-  providers: [PostService, MessageHandler],
+  providers: [PostService /*MessageHandler*/],
 })
 export class PostModule {}
