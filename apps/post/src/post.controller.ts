@@ -101,7 +101,7 @@ export class PostController {
     const post_id = query.post_id;
     const { data } = await firstValueFrom(
       this.httpService.get(
-        `https://api.wooyeons.site:80/emotion?post_id=${post_id}`,
+        `http://api.wooyeons.site:80/emotion?post_id=${post_id}`,
       ),
     );
     console.log(data);
