@@ -8,6 +8,7 @@ import { CommonModule } from '@app/common';
 import { SnsModule } from '@app/sns';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import { MessageHandler } from './post.message.handler';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -33,11 +34,17 @@ import { MessageHandler } from './post.message.handler';
           queueUrl: `${process.env.SQS_URL}/post-user_deleted.fifo`,
           region: 'ap-northeast-2', // url of the queue,
         },
+        {
+          name: 'post-comment_deleted.fifo', // name of the queue
+          queueUrl: `${process.env.SQS_URL}/post-comment_deleted.fifo`,
+          region: 'ap-northeast-2', // url of the queue,
+        },
       ],
       producers: [],
     }),
     CommonModule,
     SnsModule,
+    HttpModule,
   ],
   controllers: [PostController],
   providers: [PostService, MessageHandler],

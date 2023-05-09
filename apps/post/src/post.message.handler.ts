@@ -8,4 +8,14 @@ export class MessageHandler {
   public async handleMessage(message: Message) {
     console.log(message);
   }
+
+  @SqsMessageHandler(
+    /** name: */ 'post-comment_deleted.fifo',
+    /** batch: */ false,
+  )
+  public async handleCommentMessage(message: Message) {
+    console.log(message);
+  }
 }
+
+//npm run start:dev comment
