@@ -80,7 +80,7 @@ export class PostController {
     console.log(user_id);
     console.log(role);
 
-    return 'good';
+    return 'goods';
   }
 
   @Get('/benchmark_by_service_connect')
