@@ -68,6 +68,11 @@ jobs:
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .prod.env
           echo "SNS_TOPIC_ARN=${{ secrets.SNS_TOPIC_ARN }}" >> .prod.env
           echo "SQS_URL=${{ secrets.SQS_URL }}" >> .prod.env
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .prod.env
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .prod.env
+          echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> .prod.env
+          echo "S3_URL=${{ secrets.S3_URL }}" >> .prod.env
+
       #     echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .prod.env
       #     echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .prod.env
       #     echo "KAKAO_CALLBACK_URL=${{ secrets.KAKAO_CALLBACK_URL }}" >> .prod.env
