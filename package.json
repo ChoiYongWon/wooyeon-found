@@ -25,6 +25,7 @@
     "test:e2e": "jest --config ./apps/wooyeon_microservice/test/jest-e2e.json"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.332.0",
     "@aws-sdk/client-sns": "^3.321.1",
     "@aws-sdk/client-sqs": "^3.321.1",
     "@nestjs/axios": "^2.0.0",
@@ -45,7 +46,8 @@
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.3.14"
+    "typeorm": "^0.3.14",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -53,6 +55,7 @@
     "@nestjs/testing": "^9.0.0",
     "@types/express": "^4.17.13",
     "@types/jest": "29.2.4",
+    "@types/multer": "^1.4.7",
     "@types/node": "18.11.18",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
