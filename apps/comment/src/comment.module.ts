@@ -7,6 +7,7 @@ import { SnsModule } from '@app/sns';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Comment } from './entity/comment.entity';
+import { MessageHandler } from './comment.message.handler';
 
 @Module({
   imports: [
@@ -33,7 +34,9 @@ import { Comment } from './entity/comment.entity';
           region: 'ap-northeast-2', // url of the queue,
         },
         {
-          name: 'comment-user_created.fifo',
+          name: 'comment-post_deleted.fifo',
+          queueUrl: `${process.env.SQS_URL}/comment-post_deleted.fifo`,
+          region: 'ap-northeast-2',
         },
       ],
       producers: [], // 이벤트 발행
@@ -42,6 +45,6 @@ import { Comment } from './entity/comment.entity';
     SnsModule,
   ],
   controllers: [CommentController],
-  providers: [CommentService],
+  providers: [CommentService, MessageHandler],
 })
 export class CommentModule { }

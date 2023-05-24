@@ -2,15 +2,30 @@ import { Body, Injectable, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comment } from './entity/comment.entity';
+import { RequestCreateCommentDto } from './dto/CreateComment.dto';
+import { RequestUpdateCommentDto } from './dto/UpdateComment.dto';
+import SnsService from '@app/sns/sns.service';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectRepository(Comment)
     private commentRepository: Repository<Comment>,
+    private readonly snsService: SnsService,
+
   ) { }
   getHello(): string {
     return 'Hi hello';
+  }
+
+  // post에 달린 댓글 개수
+  async getCommentsCount(post_id: string) { // dto
+    const count = this.commentRepository
+      .createQueryBuilder('comment')
+      .where('comment.post_id = :post_id', { post_id })
+      .getCount();
+
+    return count;
   }
 
   // post의 모든 댓글 불러오기
@@ -23,42 +38,58 @@ export class CommentService {
     //   return '없는 게시글입니다.';
     // }
 
-    const comments = this.commentRepository
+    const comments = await this.commentRepository
       .createQueryBuilder('comment')
-      .select('comment_id')
-      .addSelect('user_id')
-      .addSelect('content')
-      .addSelect('created_at')
+      .select('comment.comment_id')
+      .addSelect('comment.user_id')
+      .addSelect('comment.content')
+      .addSelect('comment.created_at')
       .leftJoin('comment.post_id', 'post_id')
       .where('comment.post_id = :post_id', { post_id })
       .getMany();
 
-    return comments; // 이러면되나?
+    return comments;
   }
 
-  // post에 달린 댓글 개수
-  async getCommentsCount(post_id: string) {
-    const count = this.commentRepository
-      .createQueryBuilder('comment')
-      .where('comment.post_id = :post_id', { post_id })
-      .getCount();
+  // 로그인한 유저가 클릭한 post에 쓴 댓글을 확인
+  async checkUser(user_id: string, post_id: string) {
+    const isMine = this.commentRepository.findBy({
+      user_id: user_id,
+      post_id: post_id,
+    });
 
-    return count;
+    if (isMine) {
+      // 내가 쓴 댓글의 commentID 찾음
+      const myComments = await this.commentRepository
+        .createQueryBuilder('comment')
+        .select('comment_id')
+        .where('user_id = :user_id', { user_id })
+        .andWhere('post_id = :post_id', { post_id })
+        .getMany();
+
+      return myComments;
+    }
+
+    return;
   }
 
   // 새 댓글 추가
-  async addComment(content: string) {
+  async addComment(body: RequestCreateCommentDto, user_id: string) {
+    //const isExistedPost;
+
     const comment = this.commentRepository.create({
-      content: content,
+      post_id: body.post_id,
+      user_id: user_id,
+      content: body.content,
     });
     return await this.commentRepository.insert(comment);
   }
 
   // 댓글 수정
-  async updateComment(comment_id: string, content: string) {
+  async updateComment(body: RequestUpdateCommentDto, user_id: string) {
     const comment = await this.commentRepository.findOne({
       where: {
-        comment_id,
+        comment_id: body.comment_id,
       },
     });
 
@@ -67,15 +98,19 @@ export class CommentService {
       return '없는 댓글입니다.';
     }
 
-    comment.content = content;
+    comment.content = body.content;
 
     return await this.commentRepository.save(comment);
   }
 
   // 댓글 삭제
   async deleteComment(comment_id: string) {
-    return await this.commentRepository.delete({
+    const { post_id } = await this.commentRepository.findOneBy({ comment_id });
+    // if(!post_id) 
+
+    await this.commentRepository.delete({
       comment_id,
     });
+    await this.snsService.publishMessage(post_id, 'comment_deleted');
   }
 }

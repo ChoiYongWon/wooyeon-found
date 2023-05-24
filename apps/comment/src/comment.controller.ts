@@ -43,9 +43,8 @@ export class CommentController {
 
   @Get()
   async sendComment(@Req() req) {
-    // return this.postService.getHello();
     return await this.snsService.publishMessage(
-      'comment message send',
+      'comment delete message',
       'comment_deleted',
     );
   }
@@ -57,18 +56,24 @@ export class CommentController {
     return await this.commentService.loadAllComments(req.post_id);
   }
 
+  @Get('/count')
+  @Roles([Role.User])
+  async commentsCount(@Query() query) {
+    return await this.commentService.getCommentsCount(query.post_id);
+  }
+
   @Post()
   @Roles([Role.User])
   // 댓글 추가
-  async addComment(@Body() body: RequestCreateCommentDto) {
-    return await this.commentService.addComment(body.content);
+  async addComment(@Body() body: RequestCreateCommentDto, user_id: string) {
+    return await this.commentService.addComment(body, user_id);
   }
 
   @Patch()
   @Roles([Role.User])
   // 댓글 수정
-  async updateComment(@Body() body: RequestUpdateCommentDto) {
-    return await this.commentService.updateComment(body.comment_id, body.content);
+  async updateComment(@Body() body: RequestUpdateCommentDto, user_id: string) {
+    return await this.commentService.updateComment(body, user_id);
   }
 
   @Delete()
