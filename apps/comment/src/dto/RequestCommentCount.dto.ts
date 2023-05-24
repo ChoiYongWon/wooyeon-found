@@ -1,10 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString } from "class-validator";
 
-export class RequestUpdateCommentDto {
+export class RequestCommentCountDto {
     @ApiProperty()
-    comment_id: string;
-
-    @ApiProperty()
-    content: string;
+    @IsString()
+    post_id: string;
 }

@@ -2,8 +2,9 @@ import { Body, Injectable, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comment } from './entity/comment.entity';
-import { RequestCreateCommentDto } from './dto/CreateComment.dto';
-import { RequestUpdateCommentDto } from './dto/UpdateComment.dto';
+import { RequestCreateCommentDto } from './dto/RequestCreateComment.dto';
+import { RequestUpdateCommentDto } from './dto/RequestUpdateComment.dto';
+import { RequestCommentCountDto } from './dto/RequestCommentCount.dto';
 import SnsService from '@app/sns/sns.service';
 
 @Injectable()
@@ -19,10 +20,10 @@ export class CommentService {
   }
 
   // post에 달린 댓글 개수
-  async getCommentsCount(post_id: string) { // dto
+  async getCommentsCount(comment: RequestCommentCountDto) {
     const count = this.commentRepository
       .createQueryBuilder('comment')
-      .where('comment.post_id = :post_id', { post_id })
+      .where(`comment.post_id = ${comment.post_id}`)
       .getCount();
 
     return count;
@@ -53,24 +54,15 @@ export class CommentService {
 
   // 로그인한 유저가 클릭한 post에 쓴 댓글을 확인
   async checkUser(user_id: string, post_id: string) {
-    const isMine = this.commentRepository.findBy({
-      user_id: user_id,
-      post_id: post_id,
-    });
+    // 내가 쓴 댓글의 commentID 찾음
+    const myComments = await this.commentRepository
+      .createQueryBuilder('comment')
+      .select('comment_id')
+      .where('user_id = :user_id', { user_id })
+      .andWhere('post_id = :post_id', { post_id })
+      .getMany();
 
-    if (isMine) {
-      // 내가 쓴 댓글의 commentID 찾음
-      const myComments = await this.commentRepository
-        .createQueryBuilder('comment')
-        .select('comment_id')
-        .where('user_id = :user_id', { user_id })
-        .andWhere('post_id = :post_id', { post_id })
-        .getMany();
-
-      return myComments;
-    }
-
-    return;
+    return myComments;
   }
 
   // 새 댓글 추가
@@ -90,6 +82,7 @@ export class CommentService {
     const comment = await this.commentRepository.findOne({
       where: {
         comment_id: body.comment_id,
+        user_id: user_id,
       },
     });
 
@@ -106,7 +99,9 @@ export class CommentService {
   // 댓글 삭제
   async deleteComment(comment_id: string) {
     const { post_id } = await this.commentRepository.findOneBy({ comment_id });
-    // if(!post_id) 
+    if (!post_id) {
+      return '없는 게시글입니다';
+    }
 
     await this.commentRepository.delete({
       comment_id,
