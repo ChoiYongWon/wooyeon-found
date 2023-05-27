@@ -41,11 +41,11 @@ export class CommentService {
     const comments = await this.commentRepository
       .createQueryBuilder('comment')
       .select('comment.comment_id')
-      .addSelect('comment.user_id')
+      .addSelect('comment.post_id')
       .addSelect('comment.content')
       .addSelect('comment.created_at')
-      .leftJoin('comment.post_id', 'post_id')
       .where('comment.post_id = :post_id', { post_id })
+      .orderBy('created_at', 'ASC')
       .getMany();
 
     return comments;
