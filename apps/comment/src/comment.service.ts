@@ -13,8 +13,7 @@ export class CommentService {
     @InjectRepository(Comment)
     private commentRepository: Repository<Comment>,
     private readonly snsService: SnsService,
-
-  ) { }
+  ) {}
   getHello(): string {
     return 'Hi hello';
   }
@@ -74,7 +73,8 @@ export class CommentService {
       user_id: user_id,
       content: body.content,
     });
-    return await this.commentRepository.insert(comment);
+    await this.commentRepository.insert(comment);
+    await this.snsService.publishMessage(body.post_id, 'comment_created');
   }
 
   // 댓글 수정
