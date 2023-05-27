@@ -10,6 +10,7 @@ import { SqsModule } from '@ssut/nestjs-sqs';
 import { MessageHandler } from './post.message.handler';
 import { HttpModule } from '@nestjs/axios';
 import { Image } from './entity/image.entity';
+import { View } from './entity/view.entity';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { Image } from './entity/image.entity';
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'prod' ? '.prod.env' : '.dev.env',
     }),
-    TypeOrmModule.forFeature([Post, Image]),
+    TypeOrmModule.forFeature([Post, Image, View]),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: `${process.env.DB_URL}`,
@@ -25,7 +26,7 @@ import { Image } from './entity/image.entity';
       username: `${process.env.DB_USER}`,
       password: `${process.env.DB_PASSWORD}`,
       database: `${process.env.DB_DATABASE}`,
-      entities: [Post, Image],
+      entities: [Post, Image, View],
       synchronize: true,
     }),
     SqsModule.register({
