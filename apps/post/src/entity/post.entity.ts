@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   OneToMany,
+  RelationCount,
 } from 'typeorm';
 import { Image } from './image.entity';
+import { View } from './view.entity';
 
 @Entity()
 export class Post {
@@ -35,6 +37,11 @@ export class Post {
   })
   image: Image[];
 
+  @OneToMany(() => View, (view) => view.post, {
+    cascade: true,
+  })
+  view: View[];
+
   @Column({
     type: 'int',
     default: 0,
@@ -46,10 +53,4 @@ export class Post {
     default: 0,
   })
   emotion_count: number;
-
-  @Column({
-    type: 'int',
-    default: 0,
-  })
-  view_count: number;
 }

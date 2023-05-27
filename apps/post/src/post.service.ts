@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Post } from './entity/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -14,6 +14,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { Image } from './entity/image.entity';
 import { PostUploadFailException } from './exception/PostUploadFail.exception';
 import { RequestReadNearPostDto } from './dto/request/ReadNearPost.dto';
+import { RequestReadIsPostViewedDto } from './dto/request/ReadIsPostViewed.dto';
+import { View } from './entity/view.entity';
+import { RequestReadPostDto } from './dto/request/ReadPost.dto';
+import { RequestReadViewedPostByMonthDto } from './dto/request/ReadViewedPostByMonth.dto';
+import { HttpService } from '@nestjs/axios';
+import { catchError, firstValueFrom } from 'rxjs';
+import { AxiosError } from 'axios';
 
 @Injectable()
 export class PostService {
@@ -22,7 +29,12 @@ export class PostService {
   constructor(
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
+
+    @InjectRepository(View)
+    private viewRepository: Repository<View>,
+
     private readonly snsService: SnsService,
+    private readonly httpService: HttpService,
   ) {
     this.s3Client = new S3Client({
       region: 'ap-northeast-2',
@@ -171,6 +183,77 @@ export class PostService {
     return near_post;
   }
 
+  async readNearPostExceptViewed(
+    post: RequestReadNearPostDto,
+    user_id: string,
+  ) {
+    // const { data } = await firstValueFrom(
+    //   this.httpService.get(`http://api.wooyeons.site/user/search?${user_id}`),
+    //   // .pipe(catchError(() => ({ data: null }))),
+    // ).catch(() => null);
+    // console.log(`axios result : ${data}`);
+
+    const near_post = await this.postRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.image', 'image')
+      .leftJoinAndSelect('post.view', 'view')
+      .where('view.user_id is NULL')
+      .select('post.post_id')
+      .addSelect('post.created_at')
+      .addSelect('image.img_url')
+      .addSelect(
+        `6371 * acos(cos(radians(${post.latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${post.longitude})) + sin(radians(${post.latitude})) * sin(radians(latitude)))`,
+        'distance',
+      )
+      .having(`distance <= ${0.1}`) //100 미터 이내 모든 우연
+      .getMany();
+    return near_post;
+  }
+
+  async readViewedPostByMonth(
+    data: RequestReadViewedPostByMonthDto,
+    user_id: string,
+  ) {
+    const near_post = await this.postRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.image', 'image')
+      .leftJoinAndSelect('post.view', 'view')
+      .where('view.user_id = :user_id', { user_id })
+      .andWhere('post.created_at >= :startDate', {
+        startDate: new Date(data.year, data.month - 1),
+      })
+      .andWhere('post.created_at < :endDate', {
+        endDate: new Date(data.year, data.month),
+      })
+      .distinctOn(['view.user_id'])
+      .select('post.post_id')
+      .addSelect('post.created_at')
+      .addSelect('image.img_url')
+      .addSelect('post.latitude')
+      .addSelect('post.longitude')
+      .getMany();
+    return near_post;
+  }
+
+  async readPost(post: RequestReadPostDto, user_id: string) {
+    const result = await this.postRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.image', 'image')
+      .loadRelationCountAndMap('post.viewCount', 'post.view')
+      .where('post_id = :post_id', { post_id: post.post_id })
+      .getOne();
+    if (result.user_id != user_id) {
+      //우연 작성자랑 조회자가 일치하지않을때
+      const view = await this.viewRepository.create({
+        user_id,
+        post: result,
+      });
+      await this.viewRepository.save(view);
+    }
+
+    return result;
+  }
+
   async deletePost(post: RequestDeletePostDto, user_id: string) {
     //User가  존재하는지 검증하는 과정 필요
 
@@ -194,5 +277,14 @@ export class PostService {
     const res = await this.postRepository.delete({ post_id: post.post_id });
     await this.snsService.publishMessage(post.post_id, 'post_deleted');
     return res;
+  }
+
+  async isPostViewed({ user_id, post_id }: RequestReadIsPostViewedDto) {
+    return await this.viewRepository
+      .createQueryBuilder('view')
+      .leftJoin('view.post', 'post')
+      .where('user_id = :user_id', { user_id })
+      .andWhere('post.post_id = :userpost_id_id', { post_id })
+      .getExists();
   }
 }

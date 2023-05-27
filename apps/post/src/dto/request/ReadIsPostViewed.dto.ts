@@ -4,8 +4,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsString, IsUUID } from 'class-validator';
 
-export class RequestReadPostDto {
+export class RequestReadIsPostViewedDto {
   @ApiProperty()
   @IsUUID()
   post_id: string;
+
+  @ApiProperty()
+  @IsUUID()
+  user_id: string;
 }
