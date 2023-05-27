@@ -90,9 +90,6 @@ export class UserController {
     status: 200,
     type: ResponseGetUserDto,
   })
-  @Roles([Role.User])
-  @UseGuards(RolesGuard)
-  @UseGuards(JwtAuthGuard)
   async getUser(@Query() query: RequestGetOneUserDto) {
     const { user_id } = query;
     return await this.userService.findOne(user_id);
