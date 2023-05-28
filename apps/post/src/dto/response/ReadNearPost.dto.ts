@@ -1,7 +1,7 @@
 import { CATEGORY } from '@app/common/enums/category.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
 
 export class ResponseReadNearPostDto {
   @ApiProperty()
@@ -14,5 +14,9 @@ export class ResponseReadNearPostDto {
 
   @ApiProperty()
   @IsDate()
-  created_time: Date;
+  created_at: Date;
+
+  @ApiProperty()
+  @IsArray()
+  image: string[];
 }

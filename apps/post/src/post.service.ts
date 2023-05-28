@@ -167,7 +167,7 @@ export class PostService {
     await this.postRepository.delete({ user_id });
   }
 
-  async readNearPost(post: RequestReadNearPostDto) {
+  async readNearPost(data: RequestReadNearPostDto) {
     const near_post = await this.postRepository
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.image', 'image')
@@ -175,37 +175,34 @@ export class PostService {
       .addSelect('post.created_at')
       .addSelect('image.img_url')
       .addSelect(
-        `6371 * acos(cos(radians(${post.latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${post.longitude})) + sin(radians(${post.latitude})) * sin(radians(latitude)))`,
+        `6371 * acos(cos(radians(${data.latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${data.longitude})) + sin(radians(${data.latitude})) * sin(radians(latitude)))`,
         'distance',
       )
-      .having(`distance <= ${0.1}`) //100 미터 이내 모든 우연
+      .having(`distance <= ${data.range}`) //100 미터 이내 모든 우연
       .getMany();
     return near_post;
   }
 
   async readNearPostExceptViewed(
-    post: RequestReadNearPostDto,
+    data: RequestReadNearPostDto,
     user_id: string,
   ) {
-    // const { data } = await firstValueFrom(
-    //   this.httpService.get(`http://api.wooyeons.site/user/search?${user_id}`),
-    //   // .pipe(catchError(() => ({ data: null }))),
-    // ).catch(() => null);
-    // console.log(`axios result : ${data}`);
-
     const near_post = await this.postRepository
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.image', 'image')
       .leftJoinAndSelect('post.view', 'view')
-      .where('view.user_id is NULL')
+      .where('view.user_id != :user_id or view.user_id is null', { user_id })
+      .andWhere('post.user_id != :user_id', { user_id })
+      .andWhere('post.category in (:category)', { category: data.category })
       .select('post.post_id')
       .addSelect('post.created_at')
       .addSelect('image.img_url')
+      .addSelect('post.category')
       .addSelect(
-        `6371 * acos(cos(radians(${post.latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${post.longitude})) + sin(radians(${post.latitude})) * sin(radians(latitude)))`,
+        `6371 * acos(cos(radians(${data.latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${data.longitude})) + sin(radians(${data.latitude})) * sin(radians(latitude)))`,
         'distance',
       )
-      .having(`distance <= ${0.1}`) //100 미터 이내 모든 우연
+      .having(`distance <= ${data.range}`) //100 미터 이내 모든 우연
       .getMany();
     return near_post;
   }
@@ -231,16 +228,27 @@ export class PostService {
       .addSelect('image.img_url')
       .addSelect('post.latitude')
       .addSelect('post.longitude')
+      .addSelect('post.category')
       .getMany();
     return near_post;
   }
 
-  async readPost(post: RequestReadPostDto, user_id: string) {
+  async readPost(dto: RequestReadPostDto, user_id: string) {
+    const { data: comment } = await firstValueFrom(
+      this.httpService.get(`http://comment:80/comment?post_id=${dto.post_id}`),
+      // .pipe(catchError(() => ({ data: null }))),
+    ).catch(() => ({ data: [] }));
+
+    const { data: emotion } = await firstValueFrom(
+      this.httpService.get(`http://emotion:80/emotion?post_id=${dto.post_id}`),
+      // .pipe(catchError(() => ({ data: null }))),
+    ).catch(() => ({ data: [] }));
+
     const result = await this.postRepository
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.image', 'image')
       .loadRelationCountAndMap('post.viewCount', 'post.view')
-      .where('post_id = :post_id', { post_id: post.post_id })
+      .where('post_id = :post_id', { post_id: dto.post_id })
       .getOne();
     if (result.user_id != user_id) {
       //우연 작성자랑 조회자가 일치하지않을때
@@ -251,7 +259,11 @@ export class PostService {
       await this.viewRepository.save(view);
     }
 
-    return result;
+    return {
+      ...result,
+      comment,
+      emotion,
+    };
   }
 
   async deletePost(post: RequestDeletePostDto, user_id: string) {

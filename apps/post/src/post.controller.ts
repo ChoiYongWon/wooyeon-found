@@ -103,6 +103,7 @@ export class PostController {
   @ApiCreatedResponse({
     status: 200,
     type: ResponseReadPostDto,
+    isArray: true,
   })
   async readViewPostByMonth(
     @Query() query: RequestReadViewedPostByMonthDto,
@@ -133,6 +134,7 @@ export class PostController {
   @ApiCreatedResponse({
     status: 200,
     type: ResponseReadNearPostDto,
+    isArray: true,
   })
   async readNearPost(@Query() query: RequestReadNearPostDto) {
     return await this.postService.readNearPost(query);
@@ -148,6 +150,7 @@ export class PostController {
   @ApiCreatedResponse({
     status: 200,
     type: ResponseReadNearPostDto,
+    isArray: true,
   })
   async readNearPostExceptViewed(
     @Query() query: RequestReadNearPostDto,

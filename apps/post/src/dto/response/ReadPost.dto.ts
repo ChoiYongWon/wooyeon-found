@@ -1,7 +1,7 @@
 import { CATEGORY } from '@app/common/enums/category.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
 
 export class ResponseReadPostDto {
   @ApiProperty()
@@ -11,6 +11,18 @@ export class ResponseReadPostDto {
   @ApiProperty()
   @IsString()
   content: string;
+
+  @ApiProperty()
+  @IsArray()
+  image: string[];
+
+  @ApiProperty()
+  @IsArray()
+  comment: string[];
+
+  @ApiProperty()
+  @IsArray()
+  emotion: string[];
 
   @ApiProperty()
   @IsEnum(CATEGORY)
