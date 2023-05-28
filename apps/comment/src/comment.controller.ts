@@ -20,7 +20,11 @@ import { RequestUpdateCommentDto } from './dto/RequestUpdateComment.dto';
 import { RequestDeleteCommentDto } from './dto/RequestDeleteComment.dto';
 import { RequestCommentCountDto } from './dto/RequestCommentCount.dto';
 import { RequestLoadAllCommentsDto } from './dto/RequestLoadAllComments.dto';
-import { ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOperation,
+} from '@nestjs/swagger';
 import { ResponseLoadAllCommentsDto } from './dto/ResponseLoadAllComments.dto';
 
 @Controller('/comment')
@@ -43,6 +47,8 @@ export class CommentController {
   @Roles([Role.User])
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+
   // 모든 댓글 불러오기 (게시글 눌렀을 때)
   async loadAllComments(@Query() query: RequestLoadAllCommentsDto) {
     return await this.commentService.loadAllComments(query.post_id);
@@ -67,6 +73,8 @@ export class CommentController {
   @Roles([Role.User])
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+
   // 댓글 추가
   async addComment(@Body() body: RequestCreateCommentDto, @Req() req) {
     const user_id = req.user.user_id;
@@ -92,6 +100,8 @@ export class CommentController {
   @Roles([Role.User])
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+
   // 댓글 삭제
   async deleteComment(@Body() body: RequestDeleteCommentDto) {
     return await this.commentService.deleteComment(body.comment_id);
