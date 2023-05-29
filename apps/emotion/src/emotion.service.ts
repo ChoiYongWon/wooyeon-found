@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Emotion } from './entity/emotion.entity';
 import { RequestCreateEmotionDto } from './dto/request/CreateEmotion.dto';
 import { RequestIsEmotionCheckedDto } from './dto/request/IsEmotionChecked.dto';
+import { EmotionDuplicatedException } from './exception/EmotionDuplicated.exception';
 
 @Injectable()
 export class EmotionService {
@@ -17,6 +18,16 @@ export class EmotionService {
   // 새 댓글 추가
   async addEmotion(body: RequestCreateEmotionDto, user_id: string) {
     //const isExistedPost;
+    const isExist = await this.emotionRepository.exist({
+      where: {
+        post_id: body.post_id,
+        user_id: user_id,
+      },
+    });
+
+    if (isExist) {
+      throw new EmotionDuplicatedException();
+    }
 
     const emotion = this.emotionRepository.create({
       post_id: body.post_id,
