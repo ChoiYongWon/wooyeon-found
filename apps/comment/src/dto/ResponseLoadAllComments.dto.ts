@@ -1,12 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
 
-export class RequestCreateCommentDto {
+export class ResponseLoadAllCommentsDto {
   @ApiProperty()
-  @IsString()
+  comment_id: string;
+
+  @ApiProperty()
   post_id: string;
 
   @ApiProperty()
-  @IsString()
   content: string;
+
+  @ApiProperty()
+  created_at: Date;
 }
