@@ -1,7 +1,14 @@
 import { CATEGORY } from '@app/common/enums/category.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsDate,
+  IsEnum,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export class ResponseReadPostDto {
   @ApiProperty()
@@ -53,4 +60,8 @@ export class ResponseReadPostDto {
   @ApiProperty()
   @IsNumber()
   view_count: number;
+
+  @ApiProperty()
+  @IsBoolean()
+  own_emotion: boolean;
 }
