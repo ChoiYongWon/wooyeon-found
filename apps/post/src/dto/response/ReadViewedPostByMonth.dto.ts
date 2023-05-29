@@ -1,16 +1,12 @@
 import { CATEGORY } from '@app/common/enums/category.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
 
 export class ResponseReadViewedPostByMonthDto {
   @ApiProperty()
   @IsString()
   post_id: string;
-
-  @ApiProperty()
-  @IsString()
-  content: string;
 
   @ApiProperty()
   @IsEnum(CATEGORY)
@@ -28,17 +24,9 @@ export class ResponseReadViewedPostByMonthDto {
 
   @ApiProperty()
   @IsDate()
-  created_time: Date;
+  created_at: Date;
 
   @ApiProperty()
-  @IsNumber()
-  comment_count: number;
-
-  @ApiProperty()
-  @IsNumber()
-  emotion_count: number;
-
-  @ApiProperty()
-  @IsNumber()
-  view_count: number;
+  @IsArray()
+  image: string[];
 }
