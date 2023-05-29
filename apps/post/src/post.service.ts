@@ -233,16 +233,24 @@ export class PostService {
     return near_post;
   }
 
-  async readPost(dto: RequestReadPostDto, user_id: string) {
+  async readPost(dto: RequestReadPostDto, user_id: string, jwt: string) {
     const { data: comment } = await firstValueFrom(
-      this.httpService.get(`http://comment:80/comment?post_id=${dto.post_id}`),
+      this.httpService.get(`http://comment:80/comment?post_id=${dto.post_id}`, {
+        headers: {
+          Authorization: jwt,
+        },
+      }),
       // .pipe(catchError(() => ({ data: null }))),
     ).catch(() => ({ data: [] }));
 
-    const { data: emotion } = await firstValueFrom(
-      this.httpService.get(`http://emotion:80/emotion?post_id=${dto.post_id}`),
+    const { data: own_emotion } = await firstValueFrom(
+      this.httpService.get(`http://emotion:80/emotion?post_id=${dto.post_id}`, {
+        headers: {
+          Authorization: jwt,
+        },
+      }),
       // .pipe(catchError(() => ({ data: null }))),
-    ).catch(() => ({ data: [] }));
+    ).catch(() => ({ data: false }));
 
     const result = await this.postRepository
       .createQueryBuilder('post')
@@ -262,7 +270,7 @@ export class PostService {
     return {
       ...result,
       comment,
-      emotion,
+      own_emotion,
     };
   }
 
