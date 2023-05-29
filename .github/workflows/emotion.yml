@@ -63,7 +63,7 @@ jobs:
         run: |
           echo "DB_URL=${{ secrets.DB_URL }}" >> .prod.env
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> .prod.env
-          echo "DB_DATABASE=${{ secrets.EMOTION }}" >> .prod.env
+          echo "DB_DATABASE=${{ secrets.DB_DATABASE_COMMENT }}" >> .prod.env
           echo "DB_USER=${{ secrets.DB_USER }}" >> .prod.env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .prod.env
           echo "SNS_TOPIC_ARN=${{ secrets.SNS_TOPIC_ARN }}" >> .prod.env
