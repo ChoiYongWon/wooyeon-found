@@ -39,7 +39,7 @@ export class EmotionController {
 
   @Get()
   @ApiOperation({
-    summary: '해당 유저가 특정 게시물에 좋아요 유무를 반환합니다..',
+    summary: '해당 유저가 특정 게시물에 좋아요 유무를 반환합니다.',
   })
   @ApiCreatedResponse({
     status: 200,
