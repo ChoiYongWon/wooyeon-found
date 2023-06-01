@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 import { RequestCreateUserDto } from './dto/RequestCreateUser.dto';
 import { RequestUpdateUserDto } from './dto/RequestUpdateUser.dto';
 import { ResponseGetUserDto } from './dto/ResponseGetUser.dto';
-import { CATEGORY } from './entity/Categories';
 import { ROLE } from './entity/Roles';
 import { User } from './entity/user.entity';
 
