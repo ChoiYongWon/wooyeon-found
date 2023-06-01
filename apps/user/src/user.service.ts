@@ -25,7 +25,7 @@ export class UserService {
       role: ROLE.USER,
       // category: [CATEGORY.CATEGORY1, CATEGORY.CATEGORY2],
     });
-    return await this.usersRepository.insert(user);
+    return await this.usersRepository.save(user);
   }
 
   async findOne(user_id: string): Promise<User> {
