@@ -30,6 +30,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { RequestReadNearPostDto } from './dto/request/ReadNearPost.dto';
 import { ResponseReadPostDto } from './dto/response/ReadPost.dto';
 import { RequestReadViewedPostByMonthDto } from './dto/request/ReadViewedPostByMonth.dto';
+import { HttpServiceInterceptor } from './post.interceptor';
 
 @Controller('/post')
 export class PostController {
@@ -82,6 +83,7 @@ export class PostController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('/')
+  @UseInterceptors(HttpServiceInterceptor)
   @ApiOperation({
     summary: '하나의 우연을 조회 합니다',
   })
@@ -90,7 +92,8 @@ export class PostController {
     type: ResponseReadPostDto,
   })
   async readPost(@Query() query: RequestReadPostDto, @Req() req) {
-    return await this.postService.readPost(query, req.user.user_id);
+    const jwt = req.jwt;
+    return await this.postService.readPost(query, req.user.user_id, jwt);
   }
 
   @UseGuards(RolesGuard)
@@ -103,6 +106,7 @@ export class PostController {
   @ApiCreatedResponse({
     status: 200,
     type: ResponseReadPostDto,
+    isArray: true,
   })
   async readViewPostByMonth(
     @Query() query: RequestReadViewedPostByMonthDto,
@@ -133,6 +137,7 @@ export class PostController {
   @ApiCreatedResponse({
     status: 200,
     type: ResponseReadNearPostDto,
+    isArray: true,
   })
   async readNearPost(@Query() query: RequestReadNearPostDto) {
     return await this.postService.readNearPost(query);
@@ -148,6 +153,7 @@ export class PostController {
   @ApiCreatedResponse({
     status: 200,
     type: ResponseReadNearPostDto,
+    isArray: true,
   })
   async readNearPostExceptViewed(
     @Query() query: RequestReadNearPostDto,

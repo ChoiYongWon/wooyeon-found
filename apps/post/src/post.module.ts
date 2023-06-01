@@ -11,6 +11,7 @@ import { MessageHandler } from './post.message.handler';
 import { HttpModule } from '@nestjs/axios';
 import { Image } from './entity/image.entity';
 import { View } from './entity/view.entity';
+import { HttpServiceInterceptor } from './post.interceptor';
 
 @Module({
   imports: [
@@ -64,6 +65,13 @@ import { View } from './entity/view.entity';
     HttpModule,
   ],
   controllers: [PostController],
-  providers: [PostService, MessageHandler],
+  providers: [
+    PostService,
+    MessageHandler,
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: HttpServiceInterceptor,
+    },
+  ],
 })
 export class PostModule {}

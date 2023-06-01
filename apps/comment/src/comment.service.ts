@@ -41,11 +41,11 @@ export class CommentService {
     const comments = await this.commentRepository
       .createQueryBuilder('comment')
       .select('comment.comment_id')
-      .addSelect('comment.user_id')
+      .addSelect('comment.post_id')
       .addSelect('comment.content')
       .addSelect('comment.created_at')
-      .leftJoin('comment.post_id', 'post_id')
       .where('comment.post_id = :post_id', { post_id })
+      .orderBy('created_at', 'ASC')
       .getMany();
 
     return comments;
@@ -99,13 +99,30 @@ export class CommentService {
   // 댓글 삭제
   async deleteComment(comment_id: string) {
     const { post_id } = await this.commentRepository.findOneBy({ comment_id });
-    if (!post_id) {
-      return '없는 게시글입니다';
-    }
 
     await this.commentRepository.delete({
       comment_id,
     });
     await this.snsService.publishMessage(post_id, 'comment_deleted');
+  }
+
+  // 댓글 삭제
+  async deleteCommentByPostId(post_id: string) {
+    await this.commentRepository
+      .createQueryBuilder('comment')
+      .delete()
+      .from(Comment)
+      .where('post_id = :post_id', { post_id })
+      .execute();
+  }
+
+  // 댓글 삭제
+  async deleteCommentByUserId(user_id: string) {
+    await this.commentRepository
+      .createQueryBuilder('comment')
+      .delete()
+      .from(Comment)
+      .where('user_id = :user_id', { user_id })
+      .execute();
   }
 }
