@@ -1,6 +1,18 @@
+import { CATEGORY } from '@app/common/enums/category.enum';
+import { Optional } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsLatLong,
+  IsLatitude,
+  IsLongitude,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class RequestCreatePostDto {
   @ApiProperty()
@@ -8,16 +20,19 @@ export class RequestCreatePostDto {
   content: string;
 
   @ApiProperty()
-  @IsString()
-  category: string;
+  @IsEnum(CATEGORY)
+  category: CATEGORY;
 
   @ApiProperty()
   @Type(() => Number)
-  @IsNumber()
+  @IsLongitude()
   longitude: number;
 
   @ApiProperty()
   @Type(() => Number)
-  @IsNumber()
+  @IsLatitude()
   latitude: number;
+
+  @ApiProperty()
+  file: Express.Multer.File[];
 }
