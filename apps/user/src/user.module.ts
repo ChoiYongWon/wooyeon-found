@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { HttpModule } from '@nestjs/axios';
@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from '@app/common';
 import { SnsModule } from '@app/sns';
 import { SqsModule } from '@ssut/nestjs-sqs';
+import * as morgan from 'morgan';
 
 @Module({
   imports: [
@@ -33,4 +34,8 @@ import { SqsModule } from '@ssut/nestjs-sqs';
   controllers: [UserController],
   providers: [UserService],
 })
-export class UserModule {}
+export class UserModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(morgan('tiny')).forRoutes('*');
+  }
+}
