@@ -56,10 +56,10 @@ export class AuthService {
         });
         if (res) {
           const payload = {
-            user_id: data.user_id,
-            name: data.name,
-            email: data.email,
-            role: data.role,
+            user_id: res.user_id,
+            name: res.name,
+            email: res.email,
+            role: res.role,
           };
           return {
             access_token: await this.jwtService.sign(payload),
