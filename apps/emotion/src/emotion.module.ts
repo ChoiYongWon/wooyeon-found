@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { EmotionController } from './emotion.controller';
 import { EmotionService } from './emotion.service';
 import { ConfigModule } from '@nestjs/config';
@@ -8,6 +8,7 @@ import { CommonModule } from '@app/common';
 import { SnsModule } from '@app/sns';
 import { MessageHandler } from './emotion.message.handler';
 import { Emotion } from './entity/emotion.entity';
+import * as morgan from 'morgan';
 
 @Module({
   imports: [
@@ -48,4 +49,8 @@ import { Emotion } from './entity/emotion.entity';
   controllers: [EmotionController],
   providers: [EmotionService, MessageHandler],
 })
-export class EmotionModule {}
+export class EmotionModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(morgan('tiny')).forRoutes('*');
+  }
+}
