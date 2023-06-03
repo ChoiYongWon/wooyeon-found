@@ -5,6 +5,10 @@ import { firstValueFrom } from 'rxjs';
 import { NeedKakaoEmailException } from './exception/NeedKakaoEmail.exception';
 import { UserServiceDownException } from './exception/UserServiceDown.exception';
 
+const INTERNAL_SERVER_ERROR = 500;
+const BAD_REQUEST = 400;
+const EMAIL_NOT_AGREED = 400;
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -17,55 +21,59 @@ export class AuthService {
   }
 
   async userLogin(user: any) {
-    if (!user.email) {
-      return {
-        access_token: null,
-      };
-    }
-    //유저 확인
-    const { data } = await firstValueFrom(
-      this.httpService.get(`http://user:80/user/email?email=${user.email}`),
-    ).catch(() => ({ data: null }));
-    if (data) {
-      //유저 정보가 있을 시
-      const payload = {
-        user_id: data.user_id,
-        name: data.name,
-        email: data.email,
-        role: data.role,
-      };
+    try {
+      if (!user.email) {
+        throw EMAIL_NOT_AGREED;
+      }
 
-      return {
-        access_token: await this.jwtService.sign(payload),
-      };
-    } else {
-      //그냥 아예 data가 null일때
-      if (data == null)
-        return {
-          access_token: null,
-        };
-      //신입 유저
-      const { data: res } = await firstValueFrom(
-        this.httpService.post(`http://user:80/user/`, {
-          email: data.email,
-          name: data.name,
-        }),
-      ).catch(() => ({ data: null }));
-      if (res) {
+      //유저 확인
+      const { data } = await firstValueFrom(
+        this.httpService.get(
+          `https://api.wooyeons.site/user/email?email=${user.email}`,
+        ),
+      ).catch(() => {
+        throw INTERNAL_SERVER_ERROR;
+      });
+      if (data) {
+        //유저 정보가 있을 시
         const payload = {
           user_id: data.user_id,
           name: data.name,
           email: data.email,
           role: data.role,
         };
+
         return {
           access_token: await this.jwtService.sign(payload),
         };
       } else {
-        return {
-          access_token: null,
-        };
+        //신입 유저
+        const { data: res } = await firstValueFrom(
+          this.httpService.post(`https://api.wooyeons.site/user/`, {
+            email: user.email,
+            name: user.name,
+          }),
+        ).catch(() => {
+          throw INTERNAL_SERVER_ERROR;
+        });
+        if (res) {
+          const payload = {
+            user_id: data.user_id,
+            name: data.name,
+            email: data.email,
+            role: data.role,
+          };
+          return {
+            access_token: await this.jwtService.sign(payload),
+          };
+        } else {
+          throw BAD_REQUEST;
+        }
       }
+    } catch (e) {
+      return {
+        access_token: null,
+      };
     }
   }
 }
