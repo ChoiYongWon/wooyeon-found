@@ -28,9 +28,7 @@ export class AuthService {
 
       //유저 확인
       const { data } = await firstValueFrom(
-        this.httpService.get(
-          `https://api.wooyeons.site/user/email?email=${user.email}`,
-        ),
+        this.httpService.get(`http://user:80/user/email?email=${user.email}`),
       ).catch(() => {
         throw INTERNAL_SERVER_ERROR;
       });
@@ -49,7 +47,7 @@ export class AuthService {
       } else {
         //신입 유저
         const { data: res } = await firstValueFrom(
-          this.httpService.post(`https://api.wooyeons.site/user/`, {
+          this.httpService.post(`http://user:80/user/`, {
             email: user.email,
             name: user.name,
           }),
