@@ -28,10 +28,11 @@ export class AuthService {
 
       //유저 확인
       const { data } = await firstValueFrom(
-        this.httpService.get(`http://user:80/user/email?email=${user.email}`),
+        this.httpService.get(`http://user:80/email?email=${user.email}`),
       ).catch(() => {
-        throw INTERNAL_SERVER_ERROR;
+        throw INTERNAL_SERVER_ERROR + 1;
       });
+      console.log('Data from user email : ', data);
       if (data) {
         //유저 정보가 있을 시
         const payload = {
@@ -52,8 +53,10 @@ export class AuthService {
             name: user.name,
           }),
         ).catch(() => {
-          throw INTERNAL_SERVER_ERROR;
+          throw INTERNAL_SERVER_ERROR + 2;
         });
+        console.log('Data from create user : ', res);
+
         if (res) {
           const payload = {
             user_id: data.user_id,
@@ -69,6 +72,7 @@ export class AuthService {
         }
       }
     } catch (e) {
+      console.log('error ', e);
       return {
         access_token: null,
       };
