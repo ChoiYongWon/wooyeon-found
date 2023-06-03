@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 import { ConfigModule } from '@nestjs/config';
@@ -8,6 +8,7 @@ import { SqsModule } from '@ssut/nestjs-sqs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Comment } from './entity/comment.entity';
 import { MessageHandler } from './comment.message.handler';
+import * as morgan from 'morgan';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { MessageHandler } from './comment.message.handler';
       synchronize: true,
     }),
     SqsModule.register({
-      consumers: [ // 받는거
+      consumers: [
+        // 받는거
         {
           name: 'comment-user_deleted.fifo', // name of the queue
           queueUrl: `${process.env.SQS_URL}/comment-user_deleted.fifo`,
@@ -47,4 +49,8 @@ import { MessageHandler } from './comment.message.handler';
   controllers: [CommentController],
   providers: [CommentService, MessageHandler],
 })
-export class CommentModule { }
+export class CommentModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(morgan('tiny')).forRoutes('*');
+  }
+}
