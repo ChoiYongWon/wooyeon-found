@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -7,6 +7,7 @@ import { SnsModule } from '@app/sns';
 import { JwtModule } from '@nestjs/jwt';
 import { KakaoStrategy } from './strategy/kakao.strategy';
 import { HttpModule, HttpService } from '@nestjs/axios';
+import * as morgan from 'morgan';
 
 @Module({
   imports: [
@@ -30,4 +31,8 @@ import { HttpModule, HttpService } from '@nestjs/axios';
   controllers: [AuthController],
   providers: [AuthService, KakaoStrategy],
 })
-export class AuthModule {}
+export class AuthModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(morgan('tiny')).forRoutes('*');
+  }
+}
