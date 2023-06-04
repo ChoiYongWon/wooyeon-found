@@ -42,8 +42,17 @@ export class AuthController {
   @UseGuards(KakaoAuthGuard)
   async kakaoRedirect(@Req() req, @Res() res: Response) {
     const result = await this.authService.userLogin(req.user);
+    // res.cookie('jwt', result.access_token, {
+    //   httpOnly: false,
+    //   maxAge: 24 * 60 * 60 * 1000, //1 day
+    //   // maxAge: 10 * 1000, //1 day
+    // });
+    // res.setHeader('Authorization', 'Bearer ' + result.access_token);
+    // res.redirect(
+    //   `${process.env.CLIENT_URL}/auth/kakao/redirect?access_token=${result.access_token}`,
+    // );
     res.redirect(
-      `${process.env.CLIENT_URL}/auth/kakao/redirect?access_token=${result.access_token}`,
+      `https://gentle-beignet-4eeb29.netlify.app/auth/kakao/redirect?access_token=${result.access_token}`,
     );
   }
 }
