@@ -51,6 +51,9 @@ import * as morgan from 'morgan';
 })
 export class CommentModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(morgan('tiny')).forRoutes('*');
+    consumer
+      .apply(morgan('tiny'))
+      .exclude('/comment/healthcheck')
+      .forRoutes('*');
   }
 }
