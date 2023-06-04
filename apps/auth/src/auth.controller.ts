@@ -43,7 +43,7 @@ export class AuthController {
   async kakaoRedirect(@Req() req, @Res() res: Response) {
     const result = await this.authService.userLogin(req.user);
     res.redirect(
-      `${process.env.CLIENT_URL}/auth/kakao/redirect/${result.access_token}`,
+      `${process.env.CLIENT_URL}/auth/kakao/redirect?access_token=${result.access_token}`,
     );
   }
 }

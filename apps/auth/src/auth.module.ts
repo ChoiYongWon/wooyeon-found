@@ -33,6 +33,6 @@ import * as morgan from 'morgan';
 })
 export class AuthModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(morgan('tiny')).forRoutes('*');
+    consumer.apply(morgan('tiny')).exclude('/auth/healthcheck').forRoutes('*');
   }
 }
