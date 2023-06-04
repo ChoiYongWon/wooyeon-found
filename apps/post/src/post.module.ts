@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { PostController } from './post.controller';
 import { PostService } from './post.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,6 +12,7 @@ import { HttpModule } from '@nestjs/axios';
 import { Image } from './entity/image.entity';
 import { View } from './entity/view.entity';
 import { HttpServiceInterceptor } from './post.interceptor';
+import * as morgan from 'morgan';
 
 @Module({
   imports: [
@@ -74,4 +75,8 @@ import { HttpServiceInterceptor } from './post.interceptor';
     },
   ],
 })
-export class PostModule {}
+export class PostModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(morgan('tiny')).exclude('/post/healthcheck').forRoutes('*');
+  }
+}
