@@ -49,7 +49,7 @@ export class AuthController {
     // });
     // res.setHeader('Authorization', 'Bearer ' + result.access_token);
     res.redirect(
-      `${process.env.CLIENT_URL}/auth/kakao/redirect/?access_token=${result.access_token}`,
+      `${process.env.CLIENT_URL}/auth/kakao/redirect?access_token=${result.access_token}`,
     );
   }
 }
