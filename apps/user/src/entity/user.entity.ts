@@ -1,12 +1,12 @@
-import { IsEmail } from 'class-validator';
+import { IsEmail, IsEnum } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { CATEGORY } from './Categories';
 import { ROLE } from './Roles';
+import { CATEGORY } from '@app/common/enums/category.enum';
 
 @Entity()
 export class User {
@@ -21,7 +21,7 @@ export class User {
   email!: string;
 
   @Column('simple-array')
-  category!: CATEGORY[];
+  category: CATEGORY[];
 
   @Column('varchar')
   role!: ROLE;

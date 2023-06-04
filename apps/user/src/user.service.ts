@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 import { RequestCreateUserDto } from './dto/RequestCreateUser.dto';
 import { RequestUpdateUserDto } from './dto/RequestUpdateUser.dto';
 import { ResponseGetUserDto } from './dto/ResponseGetUser.dto';
-import { CATEGORY } from './entity/Categories';
 import { ROLE } from './entity/Roles';
 import { User } from './entity/user.entity';
 
@@ -25,7 +24,7 @@ export class UserService {
       role: ROLE.USER,
       // category: [CATEGORY.CATEGORY1, CATEGORY.CATEGORY2],
     });
-    return await this.usersRepository.insert(user);
+    return await this.usersRepository.save(user);
   }
 
   async findOne(user_id: string): Promise<User> {

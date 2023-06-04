@@ -1,5 +1,6 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IsArray, IsEmail, IsEnum, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { CATEGORY } from '@app/common/enums/category.enum';
 
 export class RequestUpdateUserDto {
   @ApiProperty()
@@ -9,4 +10,9 @@ export class RequestUpdateUserDto {
   @ApiProperty()
   @IsString()
   message: string;
+
+  @ApiProperty()
+  @IsEnum(CATEGORY, { each: true })
+  @IsArray()
+  category: CATEGORY[];
 }

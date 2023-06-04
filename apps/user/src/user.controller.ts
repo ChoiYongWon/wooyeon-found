@@ -55,8 +55,8 @@ export class UserController {
     status: 200,
     type: ResponseCreateUserDto,
   })
-  async createUser(@Body() createUserBody: RequestCreateUserDto) {
-    return await this.userService.create(createUserBody);
+  async createUser(@Body() body: RequestCreateUserDto) {
+    return await this.userService.create(body);
   }
 
   // 수정
