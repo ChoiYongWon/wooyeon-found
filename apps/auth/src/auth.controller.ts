@@ -48,11 +48,8 @@ export class AuthController {
     //   // maxAge: 10 * 1000, //1 day
     // });
     // res.setHeader('Authorization', 'Bearer ' + result.access_token);
-    // res.redirect(
-    //   `${process.env.CLIENT_URL}/auth/kakao/redirect?access_token=${result.access_token}`,
-    // );
     res.redirect(
-      `https://gentle-beignet-4eeb29.netlify.app/auth/kakao/redirect?access_token=${result.access_token}`,
+      `${process.env.CLIENT_URL}/auth/kakao/redirect/?access_token=${result.access_token}`,
     );
   }
 }
