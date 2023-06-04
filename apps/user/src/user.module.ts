@@ -36,6 +36,6 @@ import * as morgan from 'morgan';
 })
 export class UserModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(morgan('tiny')).forRoutes('*');
+    consumer.apply(morgan('tiny')).exclude('/user/healthcheck').forRoutes('*');
   }
 }
