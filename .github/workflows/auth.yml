@@ -66,10 +66,10 @@ jobs:
           echo "DB_DATABASE=${{ secrets.DB_DATABASE_AUTH }}" >> .prod.env
           echo "DB_USER=${{ secrets.DB_USER }}" >> .prod.env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .prod.env
-      #     echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .prod.env
-      #     echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .prod.env
-      #     echo "KAKAO_CALLBACK_URL=${{ secrets.KAKAO_CALLBACK_URL }}" >> .prod.env
-      #     echo "CLIENT_URL=${{ secrets.CLIENT_URL }}" >> .prod.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .prod.env
+          echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .prod.env
+          echo "KAKAO_CALLBACK_URL=${{ secrets.KAKAO_CALLBACK_URL }}" >> .prod.env
+          echo "CLIENT_URL=${{ secrets.CLIENT_URL }}" >> .prod.env
       #     echo "S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}" >> .prod.env
       #     echo "S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }}" >> .prod.env
       #     echo "S3_REGION=${{ secrets.S3_REGION }}" >> .prod.env
