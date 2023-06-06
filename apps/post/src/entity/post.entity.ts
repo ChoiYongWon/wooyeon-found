@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Image } from './image.entity';
 import { View } from './view.entity';
+import { CATEGORY } from '@app/common/enums/category.enum';
 
 @Entity()
 export class Post {
@@ -21,7 +22,7 @@ export class Post {
   content!: string;
 
   @Column('varchar')
-  category!: string;
+  category!: CATEGORY;
 
   @CreateDateColumn()
   created_at!: Date;
