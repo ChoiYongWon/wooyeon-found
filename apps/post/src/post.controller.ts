@@ -30,6 +30,8 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { RequestReadNearPostDto } from './dto/request/ReadNearPost.dto';
 import { ResponseReadPostDto } from './dto/response/ReadPost.dto';
 import { RequestReadViewedPostByMonthDto } from './dto/request/ReadViewedPostByMonth.dto';
+import { RequestReadAuthorDto } from './dto/request/ReadAuthor.dto';
+import { ResponseReadAuthorDto } from './dto/response/ReadAuthor.dto';
 
 @Controller('/post')
 export class PostController {
@@ -90,7 +92,8 @@ export class PostController {
     type: ResponseReadPostDto,
   })
   async readPost(@Query() query: RequestReadPostDto, @Req() req) {
-    return await this.postService.readPost(query, req.user.user_id);
+    const jwt = req.jwt;
+    return await this.postService.readPost(query, req.user.user_id, jwt);
   }
 
   @UseGuards(RolesGuard)
@@ -157,6 +160,17 @@ export class PostController {
       query,
       req.user.user_id,
     );
+  }
+  @ApiOperation({
+    summary: '해당 우연에 대한 작성자를 조회합니다. (서비스 간 통신 전용)',
+  })
+  @ApiCreatedResponse({
+    status: 200,
+    type: ResponseReadAuthorDto,
+  })
+  @Get('/author')
+  async getAuthor(@Query() query: RequestReadAuthorDto) {
+    return await this.postService.getAuthor(query);
   }
 
   @Get('/healthcheck')

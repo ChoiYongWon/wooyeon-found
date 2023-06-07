@@ -21,6 +21,7 @@ import { RequestReadViewedPostByMonthDto } from './dto/request/ReadViewedPostByM
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
+import { RequestReadAuthorDto } from './dto/request/ReadAuthor.dto';
 
 @Injectable()
 export class PostService {
@@ -306,5 +307,13 @@ export class PostService {
       .where('user_id = :user_id', { user_id })
       .andWhere('post.post_id = :userpost_id_id', { post_id })
       .getExists();
+  }
+
+  async getAuthor({ post_id }: RequestReadAuthorDto) {
+    const { user_id } = await this.postRepository
+      .createQueryBuilder('post')
+      .where('post_id = :post_id', { post_id })
+      .getOne();
+    return { user_id };
   }
 }
