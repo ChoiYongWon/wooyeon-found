@@ -9,6 +9,7 @@ import { SnsModule } from '@app/sns';
 import { MessageHandler } from './emotion.message.handler';
 import { Emotion } from './entity/emotion.entity';
 import * as morgan from 'morgan';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import * as morgan from 'morgan';
     }),
     CommonModule,
     SnsModule,
+    HttpModule,
   ],
   controllers: [EmotionController],
   providers: [EmotionService, MessageHandler],
