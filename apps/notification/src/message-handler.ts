@@ -47,7 +47,7 @@ export class MessageHandler {
       target_id: data.target_id,
       user_id: data.user_id,
       type: NOTIFICATION.CHAT,
-      content: `새로운 쪽지가 왔습니다. 익명 : ${data.content}`,
+      content: `새로운 채팅이 왔습니다. 익명 : ${data.content}`,
     };
     Logger.log(`notification-chat.fifo ${notificationData}`);
   }
