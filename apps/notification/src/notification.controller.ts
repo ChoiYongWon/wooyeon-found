@@ -26,16 +26,6 @@ export class NotificationController {
     return 200;
   }
 
-  @Get('/post')
-  async postTest() {
-    const notificationData = {
-      target_id: '77ee9953-12bf-4439-95c2-83d00d5d446e',
-      user_id: '66ee9953-12bf-4439-95c2-83d00d5d446e',
-      content: `안녕하세요 멋지네요!`,
-    };
-    await this.snsService.publishMessage(notificationData, 'comment_created');
-  }
-
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
