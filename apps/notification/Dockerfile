@@ -21,4 +21,4 @@ ENV NODE_ENV production
 COPY --from=builder /app ./
 #10
 
-CMD ["npm","run","start:auth:prod"]
+CMD ["npm","run","start:notification:prod"]
