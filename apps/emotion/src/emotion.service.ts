@@ -9,7 +9,7 @@ import { EmotionDuplicatedException } from './exception/EmotionDuplicated.except
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { PostServiceDownException } from './exception/PostServiceDown.exception';
-import { Message } from '@app/common/dto/Message.dto';
+import { MessageDTO } from '@app/common/dto/Message.dto';
 
 @Injectable()
 export class EmotionService {
@@ -42,8 +42,8 @@ export class EmotionService {
       throw new PostServiceDownException();
     });
 
-    const message: Message = {
-      user_id: target_user_id,
+    const message: MessageDTO = {
+      user_id: target_user_id?.user_id,
       target_id: body.post_id,
       content: '',
     };
@@ -75,8 +75,8 @@ export class EmotionService {
       throw new PostServiceDownException();
     });
 
-    const message: Message = {
-      user_id: target_user_id,
+    const message: MessageDTO = {
+      user_id: target_user_id?.user_id,
       target_id: post_id,
       content: '',
     };
