@@ -11,9 +11,9 @@ export class MessageHandler {
     /** batch: */ false,
   )
   public async handleUserDeletedMessage(message: Message) {
-    const user_id = JSON.parse(JSON.parse(message.Body).Message);
-    await this.emotionService.deleteEmotionByUserId(user_id);
-    Logger.log(`emotion-user_deleted.fifo ${user_id}`);
+    const data = JSON.parse(JSON.parse(message.Body).Message);
+    await this.emotionService.deleteEmotionByUserId(data.target_id);
+    Logger.log(`emotion-user_deleted.fifo ${data.target_id}`);
   }
 
   @SqsMessageHandler(
@@ -21,8 +21,8 @@ export class MessageHandler {
     /** batch: */ false,
   )
   public async handlePostDeletedMessage(message: Message) {
-    const post_id = JSON.parse(JSON.parse(message.Body).Message);
-    await this.emotionService.deleteEmotionByPostId(post_id);
-    Logger.log(`emotion-post_deleted.fifo ${post_id}`);
+    const data = JSON.parse(JSON.parse(message.Body).Message);
+    await this.emotionService.deleteEmotionByPostId(data.target_id);
+    Logger.log(`emotion-post_deleted.fifo ${data.target_id}`);
   }
 }
