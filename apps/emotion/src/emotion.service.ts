@@ -43,7 +43,7 @@ export class EmotionService {
     });
 
     const message: MessageDTO = {
-      user_id: target_user_id,
+      user_id: target_user_id?.user_id,
       target_id: body.post_id,
       content: '',
     };
@@ -76,7 +76,7 @@ export class EmotionService {
     });
 
     const message: MessageDTO = {
-      user_id: target_user_id,
+      user_id: target_user_id?.user_id,
       target_id: post_id,
       content: '',
     };
