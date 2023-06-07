@@ -22,6 +22,7 @@ import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
 import { RequestReadAuthorDto } from './dto/request/ReadAuthor.dto';
+import { Message } from '@app/common/dto/Message.dto';
 
 @Injectable()
 export class PostService {
@@ -293,10 +294,17 @@ export class PostService {
         Quiet: true,
       },
     };
+
+    const message: Message = {
+      user_id: user_id,
+      target_id: post.post_id,
+      content: '',
+    };
+
     const command = new DeleteObjectsCommand(param);
     await this.s3Client.send(command);
     const res = await this.postRepository.delete({ post_id: post.post_id });
-    await this.snsService.publishMessage(post.post_id, 'post_deleted');
+    await this.snsService.publishMessage(message, 'post_deleted');
     return res;
   }
 
