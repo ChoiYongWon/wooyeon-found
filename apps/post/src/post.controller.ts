@@ -32,6 +32,7 @@ import { ResponseReadPostDto } from './dto/response/ReadPost.dto';
 import { RequestReadViewedPostByMonthDto } from './dto/request/ReadViewedPostByMonth.dto';
 import { RequestReadAuthorDto } from './dto/request/ReadAuthor.dto';
 import { ResponseReadAuthorDto } from './dto/response/ReadAuthor.dto';
+import { HttpServiceInterceptor } from './post.interceptor';
 
 @Controller('/post')
 export class PostController {
@@ -84,6 +85,7 @@ export class PostController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('/')
+  @UseInterceptors(HttpServiceInterceptor)
   @ApiOperation({
     summary: '하나의 우연을 조회 합니다',
   })
@@ -106,6 +108,7 @@ export class PostController {
   @ApiCreatedResponse({
     status: 200,
     type: ResponseReadPostDto,
+    isArray: true,
   })
   async readViewPostByMonth(
     @Query() query: RequestReadViewedPostByMonthDto,
@@ -136,6 +139,7 @@ export class PostController {
   @ApiCreatedResponse({
     status: 200,
     type: ResponseReadNearPostDto,
+    isArray: true,
   })
   async readNearPost(@Query() query: RequestReadNearPostDto) {
     return await this.postService.readNearPost(query);
@@ -151,6 +155,7 @@ export class PostController {
   @ApiCreatedResponse({
     status: 200,
     type: ResponseReadNearPostDto,
+    isArray: true,
   })
   async readNearPostExceptViewed(
     @Query() query: RequestReadNearPostDto,
