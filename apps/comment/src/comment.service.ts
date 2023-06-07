@@ -8,7 +8,7 @@ import { RequestCommentCountDto } from './dto/RequestCommentCount.dto';
 import SnsService from '@app/sns/sns.service';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
-import { Message } from '@app/common/dto/Message.dto';
+import { MessageDTO } from '@app/common/dto/Message.dto';
 import { PostServiceDownException } from '../exception/PostServiceDown.exception';
 
 @Injectable()
@@ -82,7 +82,7 @@ export class CommentService {
       throw new PostServiceDownException();
     });
 
-    const message: Message = {
+    const message: MessageDTO = {
       user_id: target_user_id,
       target_id: body.post_id,
       content: body.content,
@@ -130,7 +130,7 @@ export class CommentService {
       throw new PostServiceDownException();
     });
 
-    const message: Message = {
+    const message: MessageDTO = {
       user_id: target_user_id,
       target_id: post_id,
       content: content,

@@ -2,6 +2,7 @@ import { Message } from '@aws-sdk/client-sqs';
 import { Injectable, Logger } from '@nestjs/common';
 import { SqsMessageHandler } from '@ssut/nestjs-sqs';
 import { CommentService } from './comment.service';
+import { MessageDTO } from '@app/common/dto/Message.dto';
 
 @Injectable()
 export class MessageHandler {
@@ -11,7 +12,7 @@ export class MessageHandler {
     /** batch: */ false,
   )
   public async handleUserDeletedMessage(message: Message) {
-    const data = JSON.parse(JSON.parse(message.Body).Message);
+    const data: MessageDTO = JSON.parse(JSON.parse(message.Body).Message);
     await this.commentService.deleteCommentByUserId(data.target_id);
     Logger.log(`comment-user_deleted.fifo ${data.target_id}`);
   }
@@ -21,7 +22,7 @@ export class MessageHandler {
     /** batch: */ false,
   )
   public async handlePostDeletedMessage(message: Message) {
-    const data = JSON.parse(JSON.parse(message.Body).Message);
+    const data: MessageDTO = JSON.parse(JSON.parse(message.Body).Message);
     await this.commentService.deleteCommentByPostId(data.target_id);
     Logger.log(`comment-post_deleted.fifo ${data.target_id}`);
   }
