@@ -6,12 +6,17 @@ import { Emotion } from './entity/emotion.entity';
 import { RequestCreateEmotionDto } from './dto/request/CreateEmotion.dto';
 import { RequestIsEmotionCheckedDto } from './dto/request/IsEmotionChecked.dto';
 import { EmotionDuplicatedException } from './exception/EmotionDuplicated.exception';
+import { firstValueFrom } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
+import { PostServiceDownException } from './exception/PostServiceDown.exception';
+import { Message } from '@app/common/dto/Message.dto';
 
 @Injectable()
 export class EmotionService {
   constructor(
     @InjectRepository(Emotion)
     private emotionRepository: Repository<Emotion>,
+    private readonly httpService: HttpService,
     private readonly snsService: SnsService,
   ) {}
 
@@ -29,12 +34,27 @@ export class EmotionService {
       throw new EmotionDuplicatedException();
     }
 
+    const { data: target_user_id } = await firstValueFrom(
+      this.httpService.get(
+        `http://post:80/post/author?post_id=${body.post_id}`,
+      ),
+    ).catch(() => {
+      throw new PostServiceDownException();
+    });
+
+    const message: Message = {
+      user_id: target_user_id,
+      target_id: body.post_id,
+      content: '',
+    };
+
     const emotion = this.emotionRepository.create({
       post_id: body.post_id,
       user_id: user_id,
     });
-    await this.emotionRepository.insert(emotion);
-    await this.snsService.publishMessage(body.post_id, 'emotion_created');
+    const res = await this.emotionRepository.save(emotion);
+    await this.snsService.publishMessage(message, 'emotion_created');
+    return res;
   }
 
   // 새 댓글 추가
@@ -49,11 +69,23 @@ export class EmotionService {
 
   // 댓글 삭제
   async deleteEmotion(post_id: string, user_id: string) {
+    const { data: target_user_id } = await firstValueFrom(
+      this.httpService.get(`http://post:80/post/author?post_id=${post_id}`),
+    ).catch(() => {
+      throw new PostServiceDownException();
+    });
+
+    const message: Message = {
+      user_id: target_user_id,
+      target_id: post_id,
+      content: '',
+    };
+
     await this.emotionRepository.delete({
       post_id,
       user_id,
     });
-    await this.snsService.publishMessage(post_id, 'emotion_deleted');
+    await this.snsService.publishMessage(message, 'emotion_deleted');
   }
 
   // 댓글 삭제
