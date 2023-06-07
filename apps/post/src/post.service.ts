@@ -22,7 +22,7 @@ import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
 import { RequestReadAuthorDto } from './dto/request/ReadAuthor.dto';
-import { Message } from '@app/common/dto/Message.dto';
+import { MessageDTO } from '@app/common/dto/Message.dto';
 
 @Injectable()
 export class PostService {
@@ -295,7 +295,7 @@ export class PostService {
       },
     };
 
-    const message: Message = {
+    const message: MessageDTO = {
       user_id: user_id,
       target_id: post.post_id,
       content: '',
