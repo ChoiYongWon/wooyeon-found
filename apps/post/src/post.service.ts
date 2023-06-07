@@ -21,6 +21,8 @@ import { RequestReadViewedPostByMonthDto } from './dto/request/ReadViewedPostByM
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
+import { RequestReadAuthorDto } from './dto/request/ReadAuthor.dto';
+import { MessageDTO } from '@app/common/dto/Message.dto';
 
 @Injectable()
 export class PostService {
@@ -292,10 +294,17 @@ export class PostService {
         Quiet: true,
       },
     };
+
+    const message: MessageDTO = {
+      user_id: user_id,
+      target_id: post.post_id,
+      content: '',
+    };
+
     const command = new DeleteObjectsCommand(param);
     await this.s3Client.send(command);
     const res = await this.postRepository.delete({ post_id: post.post_id });
-    await this.snsService.publishMessage(post.post_id, 'post_deleted');
+    await this.snsService.publishMessage(message, 'post_deleted');
     return res;
   }
 
@@ -306,5 +315,13 @@ export class PostService {
       .where('user_id = :user_id', { user_id })
       .andWhere('post.post_id = :userpost_id_id', { post_id })
       .getExists();
+  }
+
+  async getAuthor({ post_id }: RequestReadAuthorDto) {
+    const { user_id } = await this.postRepository
+      .createQueryBuilder('post')
+      .where('post_id = :post_id', { post_id })
+      .getOne();
+    return { user_id };
   }
 }
