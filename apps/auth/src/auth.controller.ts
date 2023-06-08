@@ -39,7 +39,7 @@ export class AuthController {
   @ApiOperation({
     summary: '카카오 Redirect URL. (프론트에서 요청하는 API가 아닙니다.)',
   })
-  // @UseGuards(KakaoAuthGuard)
+  @UseGuards(KakaoAuthGuard)
   async kakaoRedirect(@Req() req, @Res() res: Response) {
     const result = await this.authService.userLogin(req.user);
     // res.cookie('jwt', result.access_token, {
