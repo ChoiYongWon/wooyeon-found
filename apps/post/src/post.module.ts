@@ -77,6 +77,9 @@ import * as morgan from 'morgan';
 })
 export class PostModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(morgan('tiny')).exclude('/post/healthcheck').forRoutes('*');
+    consumer
+      .apply(morgan('combined'))
+      .exclude('/post/healthcheck')
+      .forRoutes('*');
   }
 }

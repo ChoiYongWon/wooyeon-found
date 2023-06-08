@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Post } from './entity/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { RequestCreatePostDto } from './dto/request/CreatePost.dto';
 import { RequestDeletePostDto } from './dto/request/DeletePost.dto';
 import SnsService from '@app/sns/sns.service';
@@ -193,20 +193,35 @@ export class PostService {
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.image', 'image')
       .leftJoinAndSelect('post.view', 'view')
-      .where('view.user_id != :user_id or view.user_id is null', { user_id })
-      .andWhere('post.user_id != :user_id', { user_id })
-      .andWhere('post.category in (:category)', { category: data.category })
+
       .select('post.post_id')
       .addSelect('post.created_at')
       .addSelect('image.img_url')
+      // .addSelect('view.user_id')
+
       .addSelect('post.category')
       .addSelect(
         `6371 * acos(cos(radians(${data.latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${data.longitude})) + sin(radians(${data.latitude})) * sin(radians(latitude)))`,
         'distance',
       )
-      .having(`distance <= ${data.range}`) //100 미터 이내 모든 우연
-      .getMany();
-    return near_post;
+      .having(`distance <= ${data.range}`) //100 미터 이내 모든 우연/
+
+      .andWhere('post.user_id != :user_id', { user_id }) //사용자 중복제거
+      .andWhere('post.category IN (:...category)', {
+        category: data.category,
+      })
+      .andWhere(
+        new Brackets((qb) => {
+          qb.where('view.user_id != :user_id', { user_id }).orWhere(
+            'view.user_id is null',
+          );
+        }),
+      );
+    // .andWhere('view.user_id != :user_id', { user_id }); // 사용자가 보지 않은 것
+    // .andWhere('view.user_id is null'); // 사용자가 보지 않은 것
+
+    // console.log(near_post.getSql());
+    return near_post.getMany();
   }
 
   async readViewedPostByMonth(
