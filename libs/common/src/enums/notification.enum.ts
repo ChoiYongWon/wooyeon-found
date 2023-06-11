@@ -1,0 +1,6 @@
+export enum NOTIFICATION {
+  COMMENT = 'COMMENT',
+  EMOTION = 'EMOTION',
+  FOUND = 'FOUND',
+  CHAT = 'CHAT',
+}

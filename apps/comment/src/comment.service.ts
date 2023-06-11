@@ -6,6 +6,10 @@ import { RequestCreateCommentDto } from './dto/RequestCreateComment.dto';
 import { RequestUpdateCommentDto } from './dto/RequestUpdateComment.dto';
 import { RequestCommentCountDto } from './dto/RequestCommentCount.dto';
 import SnsService from '@app/sns/sns.service';
+import { firstValueFrom } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
+import { MessageDTO } from '@app/common/dto/Message.dto';
+import { PostServiceDownException } from '../exception/PostServiceDown.exception';
 
 @Injectable()
 export class CommentService {
@@ -13,6 +17,7 @@ export class CommentService {
     @InjectRepository(Comment)
     private commentRepository: Repository<Comment>,
     private readonly snsService: SnsService,
+    private readonly httpService: HttpService,
   ) {}
   getHello(): string {
     return 'Hi hello';
@@ -68,13 +73,30 @@ export class CommentService {
   async addComment(body: RequestCreateCommentDto, user_id: string) {
     //const isExistedPost;
 
+    const { data: target_user_id } = await firstValueFrom(
+      this.httpService.get(
+        `http://post:80/post/author?post_id=${body.post_id}`,
+      ),
+      // .pipe(catchError(() => ({ data: null }))),
+    ).catch(() => {
+      throw new PostServiceDownException();
+    });
+
+    const message: MessageDTO = {
+      user_id: target_user_id?.user_id,
+      target_id: body.post_id,
+      content: body.content,
+    };
+
     const comment = this.commentRepository.create({
       post_id: body.post_id,
       user_id: user_id,
       content: body.content,
     });
-    await this.commentRepository.insert(comment);
-    await this.snsService.publishMessage(body.post_id, 'comment_created');
+
+    const res = await this.commentRepository.save(comment);
+    await this.snsService.publishMessage(message, 'comment_created');
+    return res;
   }
 
   // 댓글 수정
@@ -98,12 +120,26 @@ export class CommentService {
 
   // 댓글 삭제
   async deleteComment(comment_id: string) {
-    const { post_id } = await this.commentRepository.findOneBy({ comment_id });
+    const { post_id, content } = await this.commentRepository.findOneBy({
+      comment_id,
+    });
+
+    const { data: target_user_id } = await firstValueFrom(
+      this.httpService.get(`http://post:80/post/author?post_id=${post_id}`),
+    ).catch(() => {
+      throw new PostServiceDownException();
+    });
+
+    const message: MessageDTO = {
+      user_id: target_user_id?.user_id,
+      target_id: post_id,
+      content: content,
+    };
 
     await this.commentRepository.delete({
       comment_id,
     });
-    await this.snsService.publishMessage(post_id, 'comment_deleted');
+    await this.snsService.publishMessage(message, 'comment_deleted');
   }
 
   // 댓글 삭제

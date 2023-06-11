@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Comment } from './entity/comment.entity';
 import { MessageHandler } from './comment.message.handler';
 import * as morgan from 'morgan';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import * as morgan from 'morgan';
     }),
     CommonModule,
     SnsModule,
+    HttpModule,
   ],
   controllers: [CommentController],
   providers: [CommentService, MessageHandler],
