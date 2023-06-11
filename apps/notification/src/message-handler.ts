@@ -49,6 +49,7 @@ export class MessageHandler {
       type: NOTIFICATION.CHAT,
       content: `새로운 채팅이 왔습니다. 익명 : ${data.content}`,
     };
+    await this.notificationService.createNotification(notificationData);
     Logger.log(`notification-chat.fifo ${notificationData}`);
   }
 }
