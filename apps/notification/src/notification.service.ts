@@ -13,7 +13,7 @@ export class NotificationService {
   ) {}
 
   async createNotification(data: RequestCreateNotificationDto) {
-    const newNotification = await this.notificationRepository.create({
+    const newNotification = this.notificationRepository.create({
       ...data,
     });
     return await this.notificationRepository.save(newNotification);

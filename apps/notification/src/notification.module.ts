@@ -35,6 +35,16 @@ import { SnsModule } from '@app/sns';
           queueUrl: `${process.env.SQS_URL}/notification-comment_created.fifo`,
           region: 'ap-northeast-2', // url of the queue,
         },
+        {
+          name: 'notification-chat.fifo', // name of the queue
+          queueUrl: `${process.env.SQS_URL}/notification-chat.fifo`,
+          region: 'ap-northeast-2', // url of the queue,
+        },
+        {
+          name: 'notification-emotion_created.fifo', // name of the queue
+          queueUrl: `${process.env.SQS_URL}/notification-emotion_created.fifo`,
+          region: 'ap-northeast-2', // url of the queue,
+        },
       ],
       producers: [],
     }),
