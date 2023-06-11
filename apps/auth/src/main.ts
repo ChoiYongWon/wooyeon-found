@@ -1,18 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AuthModule } from './auth.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from 'apps/post/src/filter/http-exception.filter';
 // import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
-  // app.connectMicroservice({
-  //   transport: Transport.TCP,
-  //   options: {
-  //     host: 'auth',
-  //     port: 8080,
-  //   },
-  // });
-  // await app.startAllMicroservices();
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: false,
+      transform: true,
+    }),
+  );
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('우연한 발견 API')
     .setDescription('우연한 발견 API 문서')

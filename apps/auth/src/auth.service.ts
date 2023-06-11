@@ -29,8 +29,10 @@ export class AuthService {
       //유저 확인
       const { data } = await firstValueFrom(
         this.httpService.get(`http://user:80/user/email?email=${user.email}`),
-      ).catch(() => {
-        throw INTERNAL_SERVER_ERROR;
+      ).catch((data) => {
+        if (data?.response?.data?.statusCode != 404)
+          throw INTERNAL_SERVER_ERROR;
+        else return { data: false };
       });
       if (data) {
         //유저 정보가 있을 시
