@@ -14,7 +14,10 @@ export class Chat {
   post_id!: string;
 
   @Column('uuid')
-  user_id!: string;
+  src_user_id!: string;
+
+  @Column('uuid')
+  dest_user_id!: string;
 
   @Column('uuid')
   group_id!: string;
