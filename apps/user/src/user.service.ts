@@ -7,10 +7,10 @@ import { Repository } from 'typeorm';
 import { RequestCreateUserDto } from './dto/RequestCreateUser.dto';
 import { RequestUpdateUserDto } from './dto/RequestUpdateUser.dto';
 import { ResponseGetUserDto } from './dto/ResponseGetUser.dto';
-import { ROLE } from './entity/Roles';
 import { User } from './entity/user.entity';
 import { MessageDTO } from '@app/common/dto/Message.dto';
 import { UserNotFoundException } from './exception/UserNotFound.exception';
+import { Role } from '@app/common/enums/role.enum';
 
 @Injectable()
 export class UserService {
@@ -23,7 +23,7 @@ export class UserService {
   async create(userData: RequestCreateUserDto) {
     const user = this.usersRepository.create({
       ...userData,
-      role: ROLE.USER,
+      role: Role.User,
       // category: [CATEGORY.CATEGORY1, CATEGORY.CATEGORY2],
     });
     return await this.usersRepository.save(user);
