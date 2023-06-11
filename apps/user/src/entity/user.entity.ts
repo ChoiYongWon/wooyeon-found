@@ -5,8 +5,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ROLE } from './Roles';
 import { CATEGORY } from '@app/common/enums/category.enum';
+import { Role } from '@app/common/enums/role.enum';
 
 @Entity()
 export class User {
@@ -24,7 +24,7 @@ export class User {
   category: CATEGORY[];
 
   @Column('varchar')
-  role!: ROLE;
+  role!: Role;
 
   @CreateDateColumn()
   created_at!: Date;

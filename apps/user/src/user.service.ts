@@ -7,9 +7,10 @@ import { Repository } from 'typeorm';
 import { RequestCreateUserDto } from './dto/RequestCreateUser.dto';
 import { RequestUpdateUserDto } from './dto/RequestUpdateUser.dto';
 import { ResponseGetUserDto } from './dto/ResponseGetUser.dto';
-import { ROLE } from './entity/Roles';
 import { User } from './entity/user.entity';
 import { MessageDTO } from '@app/common/dto/Message.dto';
+import { UserNotFoundException } from './exception/UserNotFound.exception';
+import { Role } from '@app/common/enums/role.enum';
 
 @Injectable()
 export class UserService {
@@ -22,26 +23,30 @@ export class UserService {
   async create(userData: RequestCreateUserDto) {
     const user = this.usersRepository.create({
       ...userData,
-      role: ROLE.USER,
+      role: Role.User,
       // category: [CATEGORY.CATEGORY1, CATEGORY.CATEGORY2],
     });
     return await this.usersRepository.save(user);
   }
 
   async findOne(user_id: string): Promise<User> {
-    return await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOne({
       where: {
         user_id,
       },
     });
+    if (!user) throw new UserNotFoundException();
+    return user;
   }
 
   async findOneByEmail(email: string): Promise<ResponseGetUserDto> {
-    return await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOne({
       where: {
         email,
       },
     });
+    if (!user) throw new UserNotFoundException();
+    return user;
   }
 
   async update(user_id: string, userData: RequestUpdateUserDto) {
@@ -50,6 +55,7 @@ export class UserService {
         user_id,
       },
     });
+    if (!user) throw new UserNotFoundException();
     const userToUpdate = { ...user, ...userData };
     return await this.usersRepository.save(userToUpdate);
   }
