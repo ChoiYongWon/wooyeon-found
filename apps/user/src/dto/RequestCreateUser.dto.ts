@@ -6,7 +6,6 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { ROLE } from '../entity/Roles';
 import { CATEGORY } from '@app/common/enums/category.enum';
 
 export class RequestCreateUserDto {

@@ -1,6 +1,6 @@
+import { CATEGORY } from '@app/common/enums/category.enum';
+import { Role } from '@app/common/enums/role.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { CATEGORY } from '../entity/Categories';
-import { ROLE } from '../entity/Roles';
 
 export class ResponseCreateUserDto {
   @ApiProperty()
@@ -22,5 +22,5 @@ export class ResponseCreateUserDto {
   category: CATEGORY[];
 
   @ApiProperty()
-  role: ROLE;
+  role: Role;
 }
