@@ -250,6 +250,30 @@ export class PostService {
     return near_post;
   }
 
+  async readUploadedPostByMonth(
+    data: RequestReadViewedPostByMonthDto,
+    user_id: string,
+  ) {
+    const post = await this.postRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.image', 'image')
+      .where('post.user_id = :user_id', { user_id })
+      .andWhere('post.created_at >= :startDate', {
+        startDate: new Date(data.year, data.month - 1),
+      })
+      .andWhere('post.created_at < :endDate', {
+        endDate: new Date(data.year, data.month),
+      })
+      .select('post.post_id')
+      .addSelect('post.created_at')
+      .addSelect('image.img_url')
+      .addSelect('post.latitude')
+      .addSelect('post.longitude')
+      .addSelect('post.category')
+      .getMany();
+    return post;
+  }
+
   async readPost(dto: RequestReadPostDto, user_id: string, jwt: string) {
     const { data: comment } = await firstValueFrom(
       this.httpService.get(`http://comment:80/comment?post_id=${dto.post_id}`, {
