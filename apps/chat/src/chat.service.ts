@@ -73,7 +73,7 @@ export class ChatService {
 
       const { data } = await firstValueFrom(
         this.httpService.get(
-          `https://api.wooyeons.site/post/author?post_id=${info.post_id}`,
+          `http://post:80/post/author?post_id=${info.post_id}`,
         ),
       ).catch(() => {
         throw new PostServiceDownException();
