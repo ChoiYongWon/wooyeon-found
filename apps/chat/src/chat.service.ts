@@ -13,10 +13,6 @@ import { MessageDTO } from '@app/common/dto/Message.dto';
 
 @Injectable()
 export class ChatService {
-  getHello(): string {
-    return 'Hello World!';
-  }
-
   constructor(
     @InjectRepository(Chat)
     private chatRepository: Repository<Chat>,
