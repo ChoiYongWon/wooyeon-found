@@ -192,12 +192,14 @@ export class PostService {
     const near_post = await this.postRepository
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.image', 'image')
-      .leftJoinAndSelect('post.view', 'view')
+      .leftJoinAndSelect('post.view', 'view', 'view.user_id = :user_id', {
+        user_id,
+      })
 
       .select('post.post_id')
       .addSelect('post.created_at')
       .addSelect('image.img_url')
-      // .addSelect('view.user_id')
+      .addSelect('view.user_id')
 
       .addSelect('post.category')
       .addSelect(
@@ -210,13 +212,12 @@ export class PostService {
       .andWhere('post.category IN (:...category)', {
         category: data.category,
       })
-      .andWhere(
-        new Brackets((qb) => {
-          qb.where('view.user_id != :user_id', { user_id }).orWhere(
-            'view.user_id is null',
-          );
-        }),
-      );
+      .andWhere('view.user_id is null');
+    // .andWhere(
+    //   new Brackets((qb) => {
+    //     qb.where('view.user_id != :user_id', { user_id });
+    //   }),
+    // );
     // .andWhere('view.user_id != :user_id', { user_id }); // 사용자가 보지 않은 것
     // .andWhere('view.user_id is null'); // 사용자가 보지 않은 것
 
