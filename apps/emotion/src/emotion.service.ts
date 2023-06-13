@@ -10,6 +10,7 @@ import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { PostServiceDownException } from './exception/PostServiceDown.exception';
 import { MessageDTO } from '@app/common/dto/Message.dto';
+import { EmotionDeleteDuplicatedException } from './exception/EmotionDeleteDuplicated.exception';
 
 @Injectable()
 export class EmotionService {
@@ -69,6 +70,17 @@ export class EmotionService {
 
   // 댓글 삭제
   async deleteEmotion(post_id: string, user_id: string) {
+    const isExist = await this.emotionRepository.exist({
+      where: {
+        post_id: post_id,
+        user_id: user_id,
+      },
+    });
+
+    if (!isExist) {
+      throw new EmotionDeleteDuplicatedException();
+    }
+
     const { data: target_user_id } = await firstValueFrom(
       this.httpService.get(`http://post:80/post/author?post_id=${post_id}`),
     ).catch(() => {
