@@ -24,6 +24,7 @@ export class NotificationService {
       .createQueryBuilder('notification')
       .where('user_id = :user_id', { user_id })
       .andWhere('hidden = false')
+      .orderBy('created_at', 'DESC')
       .getMany();
   }
 
