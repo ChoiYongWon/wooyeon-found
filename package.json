@@ -16,6 +16,7 @@
     "start:post:prod": "NODE_ENV=prod node dist/apps/post/main",
     "start:emotion:prod": "NODE_ENV=prod node dist/apps/emotion/main",
     "start:comment:prod": "NODE_ENV=prod node dist/apps/comment/main",
+    "start:chat:prod": "NODE_ENV=prod node dist/apps/chat/main",
     "start:notification:prod": "NODE_ENV=prod node dist/apps/notification/main",
     "start:prod": "NODE_ENV=prod node dist/apps/wooyeon_microservice/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
