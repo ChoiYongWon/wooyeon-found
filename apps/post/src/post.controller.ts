@@ -33,6 +33,8 @@ import { RequestReadViewedPostByMonthDto } from './dto/request/ReadViewedPostByM
 import { RequestReadAuthorDto } from './dto/request/ReadAuthor.dto';
 import { ResponseReadAuthorDto } from './dto/response/ReadAuthor.dto';
 import { HttpServiceInterceptor } from './post.interceptor';
+import { ResponseReadViewedPostByMonthDto } from './dto/response/ReadViewedPostByMonth.dto';
+import { ResponseReadUploadedPostByMonthDto } from './dto/response/ReadUploadedPostByMonth.dto';
 
 @Controller('/post')
 export class PostController {
@@ -107,7 +109,7 @@ export class PostController {
   })
   @ApiCreatedResponse({
     status: 200,
-    type: ResponseReadPostDto,
+    type: ResponseReadViewedPostByMonthDto,
     isArray: true,
   })
   async readViewPostByMonth(
@@ -115,6 +117,28 @@ export class PostController {
     @Req() req,
   ) {
     return await this.postService.readViewedPostByMonth(
+      query,
+      req.user.user_id,
+    );
+  }
+
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get('/uploaded')
+  @ApiOperation({
+    summary: '달별로 내가 올린 우연을 조회합니다.',
+  })
+  @ApiCreatedResponse({
+    status: 200,
+    type: ResponseReadUploadedPostByMonthDto,
+    isArray: true,
+  })
+  async readUploadedPostByMonth(
+    @Query() query: RequestReadViewedPostByMonthDto,
+    @Req() req,
+  ) {
+    return await this.postService.readUploadedPostByMonth(
       query,
       req.user.user_id,
     );
